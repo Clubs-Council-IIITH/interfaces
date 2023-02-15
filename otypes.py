@@ -8,7 +8,7 @@ from strawberry.types.info import RootValueType
 from typing import Union, Dict
 from functools import cached_property
 
-from models import PyObjectId, Sample
+from models import PyObjectId
 
 
 # custom context class
@@ -30,19 +30,8 @@ PyObjectIdType = strawberry.scalar(
     PyObjectId, serialize=str, parse_value=lambda v: PyObjectId(v)
 )
 
-# sample object type from pydantic model with all fields exposed
-@strawberry.experimental.pydantic.type(model=Sample, all_fields=True)
-class SampleType:
-    pass
 
-
-# sample query's input type from pydantic model
-@strawberry.experimental.pydantic.input(model=Sample)
-class SampleQueryInput:
-    id: strawberry.auto
-
-
-# sample mutation's input type from pydantic model
-@strawberry.experimental.pydantic.input(model=Sample)
-class SampleMutationInput:
-    attribute: strawberry.auto
+# signed url object type
+@strawberry.type
+class SignedURL:
+    url: str

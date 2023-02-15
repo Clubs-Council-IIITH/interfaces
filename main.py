@@ -11,14 +11,11 @@ from otypes import Context, PyObjectIdType
 
 # import all queries and mutations
 from queries import queries
-from mutations import mutations
 
 
 # create query types
 Query = create_type("Query", queries)
 
-# create mutation types
-Mutation = create_type("Mutation", mutations)
 
 # override context getter
 async def get_context() -> Context:
@@ -28,7 +25,6 @@ async def get_context() -> Context:
 # initialize federated schema
 schema = strawberry.federation.Schema(
     query=Query,
-    mutation=Mutation,
     enable_federation_2=True,
     scalar_overrides={PyObjectId: PyObjectIdType},
 )

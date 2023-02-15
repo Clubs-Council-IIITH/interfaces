@@ -1,35 +1,29 @@
+import json
+import requests
 import strawberry
 
-from fastapi.encoders import jsonable_encoder
-
-from db import db
-
 # import all models and types
-from models import Sample
-from otypes import Info, SampleQueryInput, SampleType
+from otypes import Info, SignedURL
 
 
-# sample query
+# fetch signed url from the files service
 @strawberry.field
-def sampleQuery(sampleInput: SampleQueryInput, info: Info) -> SampleType:
+def getSignedURL(info: Info) -> SignedURL:
     user = info.context.user
-    print("user:", user)
 
-    sample = jsonable_encoder(sampleInput.to_pydantic())
+    # make request to files api
+    response = requests.get(
+        "http://files/signed-url", params={"user": json.dumps(user)}
+    )
 
-    # query from database
-    found_sample = db.samples.find_one({"_id": sample["_id"]})
+    # error handling
+    if response.status_code != 200:
+        raise Exception(response.text)
 
-    # handle missing sample
-    if found_sample:
-        found_sample = Sample.parse_obj(found_sample)
-        return SampleType.from_pydantic(found_sample)
-
-    else:
-        raise Exception("Sample not found!")
+    return SignedURL(url=response.text)
 
 
 # register all queries
 queries = [
-    sampleQuery,
+    getSignedURL,
 ]
