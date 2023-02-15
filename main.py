@@ -5,9 +5,8 @@ from strawberry.fastapi import GraphQLRouter
 
 from fastapi import FastAPI
 
-# override PyObjectId and Context scalars
-from models import PyObjectId
-from otypes import Context, PyObjectIdType
+# override Context scalar
+from otypes import Context
 
 # import all queries and mutations
 from queries import queries
@@ -26,7 +25,6 @@ async def get_context() -> Context:
 schema = strawberry.federation.Schema(
     query=Query,
     enable_federation_2=True,
-    scalar_overrides={PyObjectId: PyObjectIdType},
 )
 
 # serve API with FastAPI router

@@ -8,8 +8,6 @@ from strawberry.types.info import RootValueType
 from typing import Union, Dict
 from functools import cached_property
 
-from models import PyObjectId
-
 
 # custom context class
 class Context(BaseContext):
@@ -24,11 +22,6 @@ class Context(BaseContext):
 
 # custom info type
 Info = _Info[Context, RootValueType]
-
-# serialize PyObjectId as a scalar type
-PyObjectIdType = strawberry.scalar(
-    PyObjectId, serialize=str, parse_value=lambda v: PyObjectId(v)
-)
 
 
 # signed url object type
