@@ -8,7 +8,7 @@ from otypes import Info, SignedURL
 
 # fetch signed url from the files service
 @strawberry.field
-def getSignedURL(info: Info) -> SignedURL:
+def signedUploadURL(info: Info) -> SignedURL:
     user = info.context.user
 
     # make request to files api
@@ -25,5 +25,5 @@ def getSignedURL(info: Info) -> SignedURL:
 
 # register all queries
 queries = [
-    getSignedURL,
+    signedUploadURL,
 ]
