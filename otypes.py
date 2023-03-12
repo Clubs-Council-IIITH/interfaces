@@ -5,8 +5,10 @@ from strawberry.fastapi import BaseContext
 from strawberry.types import Info as _Info
 from strawberry.types.info import RootValueType
 
-from typing import Union, Dict
+from typing import Union, Dict, Optional, List
 from functools import cached_property
+
+from models import PyObjectId, Mails
 
 
 # custom context class
@@ -31,6 +33,24 @@ class Context(BaseContext):
 # custom info type
 Info = _Info[Context, RootValueType]
 
+# serialize PyObjectId as a scalar type
+PyObjectIdType = strawberry.scalar(
+    PyObjectId, serialize=str, parse_value=lambda v: PyObjectId(v)
+)
+
+
+@strawberry.experimental.pydantic.type(model=Mails, fields=["subject", "uid"])
+class MailReturnType:
+    pass
+
+@strawberry.experimental.pydantic.input(model=Mails, fields=[
+    "subject",
+    "body",
+    "to_recipients"
+])
+class MailInput:
+    cc_recipients: Optional[List[str]] = strawberry.UNSET
+    uid: Optional[str] = strawberry.UNSET
 
 # signed url object type
 @strawberry.type
