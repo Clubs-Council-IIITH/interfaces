@@ -14,7 +14,7 @@ from otypes import Context
 from queries import queries
 
 # check whether running in debug mode
-DEBUG = getenv("SERVICES_DEBUG", "False").lower() in ("true", "1", "t")
+DEBUG = int(getenv("GLOBAL_DEBUG", 0))
 
 # create query types
 Query = create_type("Query", queries)
