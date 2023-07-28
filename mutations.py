@@ -5,25 +5,43 @@ from fastapi.encoders import jsonable_encoder
 from db import db
 
 # import all models and types
-from models import Sample
-from otypes import SampleMutationInput, SampleType
+from otypes import Info
+from models import Mails
+from otypes import MailInput, MailReturnType
+
+from mailing import send_mail
 
 
 # sample mutation
 @strawberry.mutation
-def sampleMutation(sampleInput: SampleMutationInput) -> SampleType:
-    sample = jsonable_encoder(sampleInput.to_pydantic())
+def sendMail(mailInput: MailInput, info: Info) -> MailReturnType:
+    user = info.context.user
+    if not user:
+        raise Exception("Not logged in!")
 
-    # add to database
-    created_id = db.samples.insert_one(sample).inserted_id
+    if user.get("role", None) not in ["cc", "club", "slo", "slc"]:
+        raise Exception("Not Authenticated to access this API!!")
 
-    # query from database
-    created_sample = Sample.parse_obj(db.samples.find_one({"_id": created_id}))
+    mail_input = jsonable_encoder(mailInput.to_pydantic())
 
-    return SampleType.from_pydantic(created_sample)
+    if mail_input["uid"] is None:
+        mail_input["uid"] = user["uid"]
+
+    if not send_mail(mail_input["subject"], mail_input["body"], mail_input["to_recipients"], mail_input["cc_recipients"]):
+        created_sample = Mails.parse_obj(
+            db.mails.find_one({"_id": 0}, {"_id": 0}))
+    else:
+        # add to database
+        created_id = db.mails.insert_one(mail_input).inserted_id
+
+        # query from database
+        created_sample = Mails.parse_obj(
+            db.mails.find_one({"_id": created_id}, {"_id": 0}))
+
+    return MailReturnType.from_pydantic(created_sample)
 
 
 # register all mutations
 mutations = [
-    sampleMutation,
+    sendMail,
 ]

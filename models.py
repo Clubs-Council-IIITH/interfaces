@@ -1,8 +1,14 @@
 from bson import ObjectId
-from pydantic import BaseModel, Field
+from pydantic import (
+    BaseModel,
+    Extra,
+    Field,
+    EmailStr
+)
 
-from typing import Optional
+from datetime import datetime
 
+from typing import List
 
 # for handling mongo ObjectIds
 class PyObjectId(ObjectId):
@@ -22,11 +28,21 @@ class PyObjectId(ObjectId):
 
 
 # sample pydantic model
-class Sample(BaseModel):
+class Mails(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    attribute: Optional[str]
+    uid: str | None
+    subject: str = Field(..., max_length=100)
+    body: str = Field(...)
+    to_recipients: List[EmailStr] = Field(..., unique_items=True)
+    cc_recipients: List[EmailStr] = Field([], unique_items=True)
 
+    sent_time: datetime = Field(
+        default_factory=datetime.utcnow, allow_mutation=False
+    )
     class Config:
         allow_population_by_field_name = True
         arbitrary_types_allowed = True
         json_encoders = {ObjectId: str}
+        extra = Extra.forbid
+        anystr_strip_whitespace = True
+        validate_assignment = True
