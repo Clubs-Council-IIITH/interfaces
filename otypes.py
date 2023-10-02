@@ -43,14 +43,14 @@ PyObjectIdType = strawberry.scalar(
 class MailReturnType:
     pass
 
-@strawberry.experimental.pydantic.input(model=Mails, fields=[
-    "subject",
-    "body",
-    "to_recipients"
-])
+
+@strawberry.experimental.pydantic.input(
+    model=Mails, fields=["subject", "body", "to_recipients"]
+)
 class MailInput:
     cc_recipients: Optional[List[str]] = strawberry.UNSET
     uid: Optional[str] = strawberry.UNSET
+
 
 # signed url object type
 @strawberry.type

@@ -14,26 +14,31 @@ def acquire_token():
     """
     authority_url = f"https://login.microsoftonline.com/{TENANT_ID}/"
     app = msal.ConfidentialClientApplication(
-        authority=authority_url, client_id=f"{CLIENT_ID}", client_credential=f"{CLIENT_SECRET}"
+        authority=authority_url,
+        client_id=f"{CLIENT_ID}",
+        client_credential=f"{CLIENT_SECRET}",
     )
     token = app.acquire_token_for_client(
-        scopes=["https://graph.microsoft.com/.default"])
+        scopes=["https://graph.microsoft.com/.default"]
+    )
     return token
 
 
 def send_mail(subject, body, to, cc):
-    try:
-        client = GraphClient(acquire_token)
+    # try:
+    client = GraphClient(acquire_token)
 
-        client.users[CLIENT_EMAIL].send_mail(
-            subject=subject,
-            body=body,
-            to_recipients=to,
-            cc_recipients=cc,
-            save_to_sent_items= "false"
-        ).execute_query()
-        
-    except Exception:
-        return False
+    client.users[CLIENT_EMAIL].send_mail(
+        subject=subject,
+        body=body,
+        to_recipients=to,
+        cc_recipients=cc,
+        # save_to_sent_items= "false"
+    ).execute_query()
 
     return True
+
+    # except Exception:
+    #     return False
+    #
+    # return True

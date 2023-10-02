@@ -1,5 +1,6 @@
 import strawberry
 
+from fastapi import BackgroundTasks
 from fastapi.encoders import jsonable_encoder
 
 from db import db
@@ -14,7 +15,7 @@ from mailing import send_mail
 
 # sample mutation
 @strawberry.mutation
-def sendMail(mailInput: MailInput, info: Info) -> MailReturnType:
+def sendMail(mailInput: MailInput, info: Info) -> bool:
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")
@@ -27,18 +28,30 @@ def sendMail(mailInput: MailInput, info: Info) -> MailReturnType:
     if mail_input["uid"] is None:
         mail_input["uid"] = user["uid"]
 
-    if not send_mail(mail_input["subject"], mail_input["body"], mail_input["to_recipients"], mail_input["cc_recipients"]):
-        created_sample = Mails.parse_obj(
-            db.mails.find_one({"_id": 0}, {"_id": 0}))
-    else:
-        # add to database
-        created_id = db.mails.insert_one(mail_input).inserted_id
+    # send mail as background task
+    info.context.background_tasks.add_task(
+        send_mail,
+        mail_input["subject"],
+        mail_input["body"],
+        mail_input["to_recipients"],
+        mail_input["cc_recipients"],
+    )
 
-        # query from database
-        created_sample = Mails.parse_obj(
-            db.mails.find_one({"_id": created_id}, {"_id": 0}))
+    # send_mail(mail_input["subject"], mail_input["body"], mail_input["to_recipients"], mail_input["cc_recipients"]):
 
-    return MailReturnType.from_pydantic(created_sample)
+    #     created_sample = Mails.parse_obj(
+    #         db.mails.find_one({"_id": 0}, {"_id": 0}))
+    # else:
+    #     # add to database
+    #     created_id = db.mails.insert_one(mail_input).inserted_id
+    #
+    #     # query from database
+    #     created_sample = Mails.parse_obj(
+    #         db.mails.find_one({"_id": created_id}, {"_id": 0}))
+    #
+    # return MailReturnType.from_pydantic(created_sample)
+
+    return True
 
 
 # register all mutations
