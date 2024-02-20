@@ -1,14 +1,11 @@
 import strawberry
 
-from fastapi import BackgroundTasks
 from fastapi.encoders import jsonable_encoder
 
-from db import db
 
 # import all models and types
 from otypes import Info
-from models import Mails
-from otypes import MailInput, MailReturnType
+from otypes import MailInput
 
 from mailing import send_mail
 
