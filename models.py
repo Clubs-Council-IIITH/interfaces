@@ -1,15 +1,10 @@
 from bson import ObjectId
-from pydantic import (
-    ConfigDict, 
-    BaseModel,
-    Field,
-    EmailStr,
-    field_validator
-)
+from pydantic import ConfigDict, BaseModel, Field, EmailStr, field_validator
 from pydantic_core import core_schema
 from typing import List, Any
 
 from datetime import datetime
+
 
 # for handling mongo ObjectIds
 class PyObjectId(ObjectId):
@@ -44,9 +39,7 @@ class Mails(BaseModel):
     to_recipients: List[EmailStr] = Field(...)
     cc_recipients: List[EmailStr] = Field([])
 
-    sent_time: datetime = Field(
-        default_factory=datetime.utcnow, frozen=True
-    )
+    sent_time: datetime = Field(default_factory=datetime.utcnow, frozen=True)
 
     @field_validator("to_recipients")
     @classmethod
@@ -54,14 +47,21 @@ class Mails(BaseModel):
         if len(value) != len(set(value)):
             raise ValueError("Duplicate Emails are not allowed in 'to_recipients'")
         return value
-    
+
     @field_validator("cc_recipients")
     @classmethod
     def validate_unique_cc(cls, value):
         if len(value) != len(set(value)):
             raise ValueError("Duplicate Emails are not allowed in 'cc_recipients'")
         return value
-    
+
     # TODO[pydantic]: The following keys were removed: `json_encoders`.
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
-    model_config = ConfigDict(populate_by_name=True, arbitrary_types_allowed=True, json_encoders={ObjectId: str}, extra="forbid", str_strip_whitespace=True, validate_assignment=True)
+    model_config = ConfigDict(
+        populate_by_name=True,
+        arbitrary_types_allowed=True,
+        json_encoders={ObjectId: str},
+        extra="forbid",
+        str_strip_whitespace=True,
+        validate_assignment=True,
+    )
