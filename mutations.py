@@ -1,7 +1,6 @@
 import strawberry
-
 from fastapi.encoders import jsonable_encoder
-
+import os
 
 # import all models and types
 from otypes import Info
@@ -9,16 +8,20 @@ from otypes import MailInput
 
 from mailing import send_mail
 
+inter_communication_secret_global = os.getenv("INTER_COMMUNICATION_SECRET")
 
 # sample mutation
 @strawberry.mutation
-def sendMail(mailInput: MailInput, info: Info) -> bool:
+def sendMail(info: Info, mailInput: MailInput, inter_communication_secret: str|None = None) -> bool:
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")
 
     if user.get("role", None) not in ["cc", "club", "slo", "slc"]:
         raise Exception("Not Authenticated to access this API!!")
+    
+    if inter_communication_secret != inter_communication_secret_global:
+        raise Exception("Authentication Error! Invalid secret!")
 
     mail_input = jsonable_encoder(mailInput.to_pydantic())
 
