@@ -79,6 +79,7 @@ class Team(StrEnum):
 
 class CCRecruitment(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    uid: str = Field(..., max_length=100)
     firstName: str = Field(..., max_length=100)
     lastName: str = Field(..., max_length=100)
     email: EmailStr = Field(...)
