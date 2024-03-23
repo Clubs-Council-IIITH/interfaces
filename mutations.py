@@ -62,8 +62,6 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
 
     cc_recruitment_input = jsonable_encoder(ccRecruitmentInput.to_pydantic())
 
-    cc_recruitment_input["uid"] = cc_recruitment_input["email"].split("@")[0]
-
     # add to database
     created_id = ccdb.insert_one(cc_recruitment_input).inserted_id
     created_sample = CCRecruitment.parse_obj(ccdb.find_one({"_id": created_id}))

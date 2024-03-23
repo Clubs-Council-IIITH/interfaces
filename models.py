@@ -71,24 +71,17 @@ class Mails(BaseModel):
 
 @strawberry.enum
 class Team(StrEnum):
-    design = auto()
-    finance = auto()
-    logistics = auto()
-    stratetgy = auto()
+    Design = auto()
+    Finance = auto()
+    Logistics = auto()
+    Stratetgy = auto()
 
 
 class CCRecruitment(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     uid: str = Field(..., max_length=100)
-    firstName: str = Field(..., max_length=100)
-    lastName: str = Field(..., max_length=100)
     email: EmailStr = Field(...)
-    phone: str = Field(..., max_length=15)
-    batch: str = Field(..., max_length=10)
-    stream: str = Field(..., max_length=10)
-    rollno: str = Field(..., max_length=11)
 
-    other_bodies: str = Field()
     teams: List[Team] = []
     design_experience: str|None = None
 
