@@ -16,3 +16,4 @@ client = MongoClient(MONGO_URI)
 
 # get database
 db = client[MONGO_DATABASE]
+ccdb = db.cc

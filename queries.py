@@ -2,9 +2,13 @@ import json
 import requests
 import strawberry
 
+from db import ccdb
+
 # import all models and types
 from otypes import Info, SignedURL
-
+from models import CCRecruitment
+from otypes import CCRecruitmentType
+from typing import List
 
 # fetch signed url from the files service
 @strawberry.field
@@ -22,8 +26,24 @@ def signedUploadURL(info: Info) -> SignedURL:
 
     return SignedURL(url=response.text)
 
+@strawberry.field
+def ccApplications(info: Info) -> List[CCRecruitmentType]:
+    user = info.context.user
+    if not user:
+        raise Exception("Not logged in!")
+
+    if user.get("role", None) not in ["cc"]:
+        raise Exception("Not Authenticated to access this API!!")
+
+    results = ccdb.find()
+    applications = [CCRecruitmentType.from_pydantic(CCRecruitment.parse_obj(result)) for result in results]
+
+    return applications
+    
+
 
 # register all queries
 queries = [
     signedUploadURL,
+    ccApplications,
 ]

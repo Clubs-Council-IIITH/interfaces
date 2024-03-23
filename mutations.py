@@ -1,11 +1,12 @@
 import strawberry
-
 from fastapi.encoders import jsonable_encoder
 
+from db import ccdb
 
 # import all models and types
 from otypes import Info
-from otypes import MailInput
+from otypes import MailInput, CCRecruitmentInput
+from models import CCRecruitment
 
 from mailing import send_mail
 
@@ -50,8 +51,36 @@ def sendMail(mailInput: MailInput, info: Info) -> bool:
 
     return True
 
+@strawberry.mutation
+def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
+    user = info.context.user
+    if not user:
+        raise Exception("Not logged in!")
+
+    if user.get("role", None) not in ["public"]:
+        raise Exception("Not Authenticated to access this API!!")
+
+    cc_recruitment_input = jsonable_encoder(ccRecruitmentInput.to_pydantic())
+
+    # add to database
+    created_id = ccdb.insert_one(cc_recruitment_input).inserted_id
+    created_sample = CCRecruitment.parse_obj(ccdb.find_one({"_id": created_id}))
+
+    # Send mail to the candidate
+    send_mail(
+        "CC Application",
+        "Your application has been received. We will get back to you soon.",
+        [created_sample.email],
+        ["clubs@iiit.ac.in"],
+        # [],
+    )
+
+    return True
+
+
 
 # register all mutations
 mutations = [
     sendMail,
+    ccApply,
 ]

@@ -8,7 +8,7 @@ from strawberry.types.info import RootValueType
 from typing import Union, Dict, Optional, List
 from functools import cached_property
 
-from models import PyObjectId, Mails
+from models import PyObjectId, Mails, CCRecruitment
 
 
 # custom context class
@@ -50,6 +50,15 @@ class MailReturnType:
 class MailInput:
     cc_recipients: Optional[List[str]] = strawberry.UNSET
     uid: Optional[str] = strawberry.UNSET
+
+
+@strawberry.experimental.pydantic.input(model=CCRecruitment, all_fields=True)
+class CCRecruitmentInput:
+    pass
+
+@strawberry.experimental.pydantic.type(model=CCRecruitment, all_fields=True)
+class CCRecruitmentType:
+    pass
 
 
 # signed url object type

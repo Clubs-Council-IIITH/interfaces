@@ -1,4 +1,6 @@
+import strawberry
 from bson import ObjectId
+from enum import StrEnum, auto
 from pydantic import ConfigDict, BaseModel, Field, EmailStr, field_validator
 from pydantic_core import core_schema
 from typing import List, Any
@@ -54,6 +56,45 @@ class Mails(BaseModel):
         if len(value) != len(set(value)):
             raise ValueError("Duplicate Emails are not allowed in 'cc_recipients'")
         return value
+
+    # TODO[pydantic]: The following keys were removed: `json_encoders`.
+    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
+    model_config = ConfigDict(
+        populate_by_name=True,
+        arbitrary_types_allowed=True,
+        json_encoders={ObjectId: str},
+        extra="forbid",
+        str_strip_whitespace=True,
+        validate_assignment=True,
+    )
+
+
+@strawberry.enum
+class Team(StrEnum):
+    design = auto()
+    finance = auto()
+    logistics = auto()
+    stratetgy = auto()
+
+
+class CCRecruitment(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    firstName: str = Field(..., max_length=100)
+    lastName: str = Field(..., max_length=100)
+    email: EmailStr = Field(...)
+    phone: str = Field(..., max_length=15)
+    batch: str = Field(..., max_length=10)
+    stream: str = Field(..., max_length=10)
+    rollno: str = Field(..., max_length=11)
+
+    other_bodies: str = Field()
+    teams: List[Team] = []
+    design_experience: str|None = None
+
+    why_this_position: str = Field()
+    why_cc: str = Field()
+    
+    sent_time: datetime = Field(default_factory=datetime.utcnow, frozen=True)
 
     # TODO[pydantic]: The following keys were removed: `json_encoders`.
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
