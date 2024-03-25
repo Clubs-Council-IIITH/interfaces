@@ -62,17 +62,21 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
 
     cc_recruitment_input = jsonable_encoder(ccRecruitmentInput.to_pydantic())
 
+    # Check if the user has already applied
+    if ccdb.find_one({"email": cc_recruitment_input["email"]}):
+        raise Exception("You have already applied for CC!!")
+
     # add to database
     created_id = ccdb.insert_one(cc_recruitment_input).inserted_id
     created_sample = CCRecruitment.parse_obj(ccdb.find_one({"_id": created_id}))
 
     # Send mail to the candidate
-    send_mail(
+    info.context.background_tasks.add_task(
+        send_mail,
         "CC Application",
         "Your application has been received. We will get back to you soon.",
         [created_sample.email],
         ["clubs@iiit.ac.in"],
-        # [],
     )
 
     return True
