@@ -74,7 +74,7 @@ class Team(StrEnum):
     Design = auto()
     Finance = auto()
     Logistics = auto()
-    Stratetgy = auto()
+    Stats = auto()
 
 
 class CCRecruitment(BaseModel):
@@ -83,11 +83,14 @@ class CCRecruitment(BaseModel):
     email: EmailStr = Field(...)
 
     teams: List[Team] = []
-    design_experience: str|None = None
+    design_experience: str | None = None
 
     why_this_position: str = Field()
     why_cc: str = Field()
-    
+    ideas: str = Field()
+    other_bodies: str = Field()
+    good_fit: str = Field()
+
     sent_time: datetime = Field(default_factory=datetime.utcnow, frozen=True)
 
     # TODO[pydantic]: The following keys were removed: `json_encoders`.
