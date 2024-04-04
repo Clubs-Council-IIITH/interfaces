@@ -56,6 +56,7 @@ class MailInput:
 class CCRecruitmentInput:
     pass
 
+
 @strawberry.experimental.pydantic.type(model=CCRecruitment, all_fields=True)
 class CCRecruitmentType:
     pass

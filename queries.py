@@ -10,6 +10,7 @@ from models import CCRecruitment
 from otypes import CCRecruitmentType
 from typing import List
 
+
 # fetch signed url from the files service
 @strawberry.field
 def signedUploadURL(info: Info) -> SignedURL:
@@ -26,6 +27,7 @@ def signedUploadURL(info: Info) -> SignedURL:
 
     return SignedURL(url=response.text)
 
+
 @strawberry.field
 def ccApplications(info: Info) -> List[CCRecruitmentType]:
     user = info.context.user
@@ -36,9 +38,13 @@ def ccApplications(info: Info) -> List[CCRecruitmentType]:
         raise Exception("Not Authenticated to access this API!!")
 
     results = ccdb.find()
-    applications = [CCRecruitmentType.from_pydantic(CCRecruitment.parse_obj(result)) for result in results]
+    applications = [
+        CCRecruitmentType.from_pydantic(CCRecruitment.parse_obj(result))
+        for result in results
+    ]
 
     return applications
+
 
 @strawberry.field
 def haveAppliedForCC(info: Info) -> bool:
@@ -53,7 +59,6 @@ def haveAppliedForCC(info: Info) -> bool:
     if result:
         return True
     return False
-    
 
 
 # register all queries
