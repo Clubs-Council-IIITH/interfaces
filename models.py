@@ -6,6 +6,11 @@ from pydantic_core import core_schema
 from typing import List, Any
 
 from datetime import datetime
+from pytz import timezone
+
+
+def create_utc_time():
+    return datetime.now(timezone("UTC"))
 
 
 # for handling mongo ObjectIds
@@ -41,7 +46,7 @@ class Mails(BaseModel):
     to_recipients: List[EmailStr] = Field(...)
     cc_recipients: List[EmailStr] = Field([])
 
-    sent_time: datetime = Field(default_factory=datetime.utcnow, frozen=True)
+    sent_time: datetime = Field(default_factory=create_utc_time, frozen=True)
 
     @field_validator("to_recipients")
     @classmethod
@@ -88,10 +93,10 @@ class CCRecruitment(BaseModel):
     why_this_position: str = Field()
     why_cc: str = Field()
     ideas: str = Field()
-    other_bodies: str = Field()
+    other_bodies: str | None = None
     good_fit: str = Field()
 
-    sent_time: datetime = Field(default_factory=datetime.utcnow, frozen=True)
+    sent_time: datetime = Field(default_factory=create_utc_time, frozen=True)
 
     # TODO[pydantic]: The following keys were removed: `json_encoders`.
     # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.
