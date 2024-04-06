@@ -1,12 +1,21 @@
 import strawberry
 from fastapi.encoders import jsonable_encoder
+
 import os
+from db import ccdb
 
 # import all models and types
 from otypes import Info
-from otypes import MailInput
+from otypes import MailInput, CCRecruitmentInput
+from models import CCRecruitment
 
 from mailing import send_mail
+from mailing_templates import (
+    CC_APPLICANT_CONFIRMATION_BODY,
+    CC_APPLICANT_CONFIRMATION_SUBJECT,
+    APPLICANT_CONFIRMATION_BODY,
+    APPLICANT_CONFIRMATION_SUBJECT,
+)
 
 inter_communication_secret_global = os.getenv("INTER_COMMUNICATION_SECRET")
 
@@ -54,7 +63,56 @@ def sendMail(info: Info, mailInput: MailInput, inter_communication_secret: str|N
     return True
 
 
+@strawberry.mutation
+def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
+    user = info.context.user
+    if not user:
+        raise Exception("Not logged in!")
+
+    if user.get("role", None) not in ["public"]:
+        raise Exception("Not Authenticated to access this API!!")
+
+    cc_recruitment_input = jsonable_encoder(ccRecruitmentInput.to_pydantic())
+
+    # Check if the user has already applied
+    if ccdb.find_one({"email": cc_recruitment_input["email"]}):
+        raise Exception("You have already applied for CC!!")
+
+    # add to database
+    created_id = ccdb.insert_one(cc_recruitment_input).inserted_id
+    created_sample = CCRecruitment.parse_obj(ccdb.find_one({"_id": created_id}))
+
+    # Send emails
+    info.context.background_tasks.add_task(
+        send_mail,
+        APPLICANT_CONFIRMATION_SUBJECT.safe_substitute(),
+        APPLICANT_CONFIRMATION_BODY.safe_substitute(),
+        [created_sample.email],
+        [],
+    )
+    info.context.background_tasks.add_task(
+        send_mail,
+        CC_APPLICANT_CONFIRMATION_SUBJECT.safe_substitute(),
+        CC_APPLICANT_CONFIRMATION_BODY.safe_substitute(
+            uid=created_sample.uid,
+            email=created_sample.email,
+            teams=", ".join(created_sample.teams),
+            why_this_position=created_sample.why_this_position,
+            why_cc=created_sample.why_cc,
+            good_fit=created_sample.good_fit,
+            ideas=created_sample.ideas,
+            other_bodies=created_sample.other_bodies,
+            design_experience=created_sample.design_experience or "N/A",
+        ),
+        ["clubs@iiit.ac.in"],
+        [],
+    )
+
+    return True
+
+
 # register all mutations
 mutations = [
     sendMail,
+    ccApply,
 ]

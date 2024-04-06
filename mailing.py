@@ -24,7 +24,7 @@ def acquire_token():
     return token
 
 
-def send_mail(subject, body, to, cc):
+def send_mail(subject, body, to, cc=[]):
     # try:
     client = GraphClient(acquire_token)
 
