@@ -52,7 +52,21 @@ class MailInput:
     uid: Optional[str] = strawberry.UNSET
 
 
-@strawberry.experimental.pydantic.input(model=CCRecruitment, all_fields=True)
+@strawberry.experimental.pydantic.input(
+    model=CCRecruitment,
+    # all_fields=True,
+    fields=[
+        "uid",
+        "email",
+        "teams",
+        "design_experience",
+        "why_this_position",
+        "why_cc",
+        "good_fit",
+        "ideas",
+        "other_bodies",
+    ],
+)
 class CCRecruitmentInput:
     pass
 
