@@ -1,6 +1,7 @@
+import os
+
 import msal
 from office365.graph_client import GraphClient
-import os
 
 TENANT_ID = os.environ.get("AD_TENANT_ID")
 CLIENT_ID = os.environ.get("AD_CLIENT_ID")

@@ -1,14 +1,14 @@
 import json
+from typing import List
+
 import requests
 import strawberry
 
 from db import ccdb
+from models import CCRecruitment
 
 # import all models and types
-from otypes import Info, SignedURL
-from models import CCRecruitment
-from otypes import CCRecruitmentType
-from typing import List
+from otypes import CCRecruitmentType, Info, SignedURL
 
 
 # fetch signed url from the files service

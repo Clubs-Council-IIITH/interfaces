@@ -1,11 +1,11 @@
+from datetime import datetime
+from enum import StrEnum, auto
+from typing import Any, List
+
 import strawberry
 from bson import ObjectId
-from enum import StrEnum, auto
-from pydantic import ConfigDict, BaseModel, Field, EmailStr, field_validator
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from pydantic_core import core_schema
-from typing import List, Any
-
-from datetime import datetime
 from pytz import timezone
 
 
@@ -52,14 +52,18 @@ class Mails(BaseModel):
     @classmethod
     def validate_unique_to(cls, value):
         if len(value) != len(set(value)):
-            raise ValueError("Duplicate Emails are not allowed in 'to_recipients'")
+            raise ValueError(
+                "Duplicate Emails are not allowed in 'to_recipients'"
+            )
         return value
 
     @field_validator("cc_recipients")
     @classmethod
     def validate_unique_cc(cls, value):
         if len(value) != len(set(value)):
-            raise ValueError("Duplicate Emails are not allowed in 'cc_recipients'")
+            raise ValueError(
+                "Duplicate Emails are not allowed in 'cc_recipients'"
+            )
         return value
 
     # TODO[pydantic]: The following keys were removed: `json_encoders`.
