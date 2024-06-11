@@ -1,19 +1,17 @@
-import strawberry
-from strawberry.tools import create_type
-from strawberry.fastapi import GraphQLRouter
-
-from fastapi import FastAPI
-
 from os import getenv
+
+import strawberry
+from fastapi import FastAPI
+from strawberry.fastapi import GraphQLRouter
+from strawberry.tools import create_type
 
 # override Context scalar
 from models import PyObjectId
+from mutations import mutations
 from otypes import Context, PyObjectIdType
 
 # import all queries and mutations
 from queries import queries
-from mutations import mutations
-
 
 # create query types
 Query = create_type("Query", queries)

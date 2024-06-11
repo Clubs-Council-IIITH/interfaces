@@ -1,21 +1,20 @@
+import os
+
 import strawberry
 from fastapi.encoders import jsonable_encoder
 
-import os
 from db import ccdb
-
-# import all models and types
-from otypes import Info
-from otypes import MailInput, CCRecruitmentInput
-from models import CCRecruitment
-
 from mailing import send_mail
 from mailing_templates import (
-    CC_APPLICANT_CONFIRMATION_BODY,
-    CC_APPLICANT_CONFIRMATION_SUBJECT,
     APPLICANT_CONFIRMATION_BODY,
     APPLICANT_CONFIRMATION_SUBJECT,
+    CC_APPLICANT_CONFIRMATION_BODY,
+    CC_APPLICANT_CONFIRMATION_SUBJECT,
 )
+from models import CCRecruitment
+
+# import all models and types
+from otypes import CCRecruitmentInput, Info, MailInput
 
 inter_communication_secret_global = os.getenv("INTER_COMMUNICATION_SECRET")
 
@@ -23,7 +22,9 @@ inter_communication_secret_global = os.getenv("INTER_COMMUNICATION_SECRET")
 # sample mutation
 @strawberry.mutation
 def sendMail(
-    info: Info, mailInput: MailInput, inter_communication_secret: str | None = None
+    info: Info,
+    mailInput: MailInput,
+    inter_communication_secret: str | None = None,
 ) -> bool:
     user = info.context.user
     if not user:
@@ -49,7 +50,7 @@ def sendMail(
         mail_input["cc_recipients"],
     )
 
-    # send_mail(mail_input["subject"], mail_input["body"], 
+    # send_mail(mail_input["subject"], mail_input["body"],
     # mail_input["to_recipients"], mail_input["cc_recipients"]):
 
     #     created_sample = Mails.parse_obj(
@@ -84,7 +85,9 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
 
     # add to database
     created_id = ccdb.insert_one(cc_recruitment_input).inserted_id
-    created_sample = CCRecruitment.parse_obj(ccdb.find_one({"_id": created_id}))
+    created_sample = CCRecruitment.parse_obj(
+        ccdb.find_one({"_id": created_id})
+    )
 
     # Send emails
     info.context.background_tasks.add_task(
