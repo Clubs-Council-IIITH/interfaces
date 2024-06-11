@@ -49,7 +49,8 @@ def sendMail(
         mail_input["cc_recipients"],
     )
 
-    # send_mail(mail_input["subject"], mail_input["body"], mail_input["to_recipients"], mail_input["cc_recipients"]):
+    # send_mail(mail_input["subject"], mail_input["body"], 
+    # mail_input["to_recipients"], mail_input["cc_recipients"]):
 
     #     created_sample = Mails.parse_obj(
     #         db.mails.find_one({"_id": 0}, {"_id": 0}))
