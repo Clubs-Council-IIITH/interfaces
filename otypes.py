@@ -49,6 +49,7 @@ class MailReturnType:
 class MailInput:
     cc_recipients: Optional[List[str]] = strawberry.UNSET
     uid: Optional[str] = strawberry.UNSET
+    html_body: Optional[bool] = False
 
 
 @strawberry.experimental.pydantic.input(

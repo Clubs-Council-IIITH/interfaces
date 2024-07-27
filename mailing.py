@@ -2,6 +2,7 @@ import os
 
 import msal
 from office365.graph_client import GraphClient
+from office365.outlook.mail.item_body import ItemBody
 
 TENANT_ID = os.environ.get("AD_TENANT_ID")
 CLIENT_ID = os.environ.get("AD_CLIENT_ID")
@@ -25,9 +26,18 @@ def acquire_token():
     return token
 
 
-def send_mail(subject, body, to, cc=[]):
+def send_mail(
+    subject: str,
+    body: str,
+    to: list,
+    cc: list = [],
+    html_body: bool | None = False,
+):
     # try:
     client = GraphClient(acquire_token)
+
+    if html_body:
+        body = ItemBody(content=body, content_type="HTML")
 
     client.users[CLIENT_EMAIL].send_mail(
         subject=subject,

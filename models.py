@@ -45,6 +45,7 @@ class Mails(BaseModel):
     body: str = Field(...)
     to_recipients: List[EmailStr] = Field(...)
     cc_recipients: List[EmailStr] = Field([])
+    html_body: bool = Field(default=False)
 
     sent_time: datetime = Field(default_factory=create_utc_time, frozen=True)
 

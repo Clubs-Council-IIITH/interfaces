@@ -48,6 +48,7 @@ def sendMail(
         mail_input["body"],
         mail_input["to_recipients"],
         mail_input["cc_recipients"],
+        mail_input["html_body"],
     )
 
     # send_mail(mail_input["subject"], mail_input["body"],
