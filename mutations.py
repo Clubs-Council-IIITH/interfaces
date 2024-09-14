@@ -54,14 +54,14 @@ def sendMail(
     # send_mail(mail_input["subject"], mail_input["body"],
     # mail_input["to_recipients"], mail_input["cc_recipients"]):
 
-    #     created_sample = Mails.parse_obj(
+    #     created_sample = Mails.model_validate(
     #         db.mails.find_one({"_id": 0}, {"_id": 0}))
     # else:
     #     # add to database
     #     created_id = db.mails.insert_one(mail_input).inserted_id
     #
     #     # query from database
-    #     created_sample = Mails.parse_obj(
+    #     created_sample = Mails.model_validate(
     #         db.mails.find_one({"_id": created_id}, {"_id": 0}))
     #
     # return MailReturnType.from_pydantic(created_sample)
@@ -86,7 +86,7 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
 
     # add to database
     created_id = ccdb.insert_one(cc_recruitment_input).inserted_id
-    created_sample = CCRecruitment.parse_obj(
+    created_sample = CCRecruitment.model_validate(
         ccdb.find_one({"_id": created_id})
     )
 

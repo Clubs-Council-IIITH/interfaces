@@ -67,12 +67,9 @@ class Mails(BaseModel):
             )
         return value
 
-    # TODO[pydantic]: The following keys were removed: `json_encoders`.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.  # noqa: E501
     model_config = ConfigDict(
         populate_by_name=True,
         arbitrary_types_allowed=True,
-        json_encoders={ObjectId: str},
         extra="forbid",
         str_strip_whitespace=True,
         validate_assignment=True,
@@ -103,12 +100,9 @@ class CCRecruitment(BaseModel):
 
     sent_time: datetime = Field(default_factory=create_utc_time, frozen=True)
 
-    # TODO[pydantic]: The following keys were removed: `json_encoders`.
-    # Check https://docs.pydantic.dev/dev-v2/migration/#changes-to-config for more information.  # noqa: E501
     model_config = ConfigDict(
         populate_by_name=True,
         arbitrary_types_allowed=True,
-        json_encoders={ObjectId: str},
         extra="forbid",
         str_strip_whitespace=True,
         validate_assignment=True,

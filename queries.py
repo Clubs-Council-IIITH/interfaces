@@ -39,7 +39,7 @@ def ccApplications(info: Info) -> List[CCRecruitmentType]:
 
     results = ccdb.find()
     applications = [
-        CCRecruitmentType.from_pydantic(CCRecruitment.parse_obj(result))
+        CCRecruitmentType.from_pydantic(CCRecruitment.model_validate(result))
         for result in results
     ]
 
