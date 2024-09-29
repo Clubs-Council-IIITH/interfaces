@@ -17,9 +17,6 @@ def signedUploadURL(info: Info) -> SignedURL:
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")
-    
-    if user.get("role", None) not in ["club", "cc", "slo", "slc"]:
-        raise Exception("Not Authenticated to access this API!!")
 
     # make request to files api
     response = requests.get(
