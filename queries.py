@@ -4,11 +4,11 @@ from typing import List
 import requests
 import strawberry
 
-from db import ccdb
-from models import CCRecruitment
+from db import ccdb, filestoragedb
+from models import CCRecruitment, StorageFile
 
 # import all models and types
-from otypes import CCRecruitmentType, Info, SignedURL
+from otypes import CCRecruitmentType, Info, SignedURL, StorageFileType
 
 
 # fetch signed url from the files service
@@ -63,9 +63,43 @@ def haveAppliedForCC(info: Info) -> bool:
     return False
 
 
+# Storagefile queries 
+
+@strawberry.type
+class StorageFilesReturn:
+    id: str
+    title: str
+
+@strawberry.field
+def storagefiles() -> List[StorageFilesReturn]:
+    """
+    Get all storage files
+    Returns a list of storage files with basic info (id and title)
+    """
+    storage_files = filestoragedb.find()
+    return [
+        StorageFileBasic(
+            id=str(storage_file["_id"]), 
+            title=storage_file["title"]
+        ) 
+        for storage_file in storage_files
+    ]
+
+
+@strawberry.field
+def storagefile(id: str) -> StorageFileType:
+    """
+    Get a storagefile by id
+    returns a storagefile
+    """
+    storagefile = filestoragedb.find_one({"_id": id})
+    return StorageFileType.from_pydantic(StorageFile.model_validate(storagefile))
+
 # register all queries
 queries = [
     signedUploadURL,
     ccApplications,
     haveAppliedForCC,
+    storagefiles,
+    storagefile
 ]

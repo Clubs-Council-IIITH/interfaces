@@ -6,8 +6,9 @@ import strawberry
 from strawberry.fastapi import BaseContext
 from strawberry.types import Info as _Info
 from strawberry.types.info import RootValueType
+from pydantic import Base64Str
 
-from models import CCRecruitment, Mails, PyObjectId
+from models import CCRecruitment, Mails, PyObjectId, StorageFile, PyInputStorageFileDetails 
 
 
 # custom context class
@@ -80,3 +81,14 @@ class CCRecruitmentType:
 @strawberry.type
 class SignedURL:
     url: str
+
+
+# StorageFile Types
+@strawberry.experimental.pydantic.input(model=PyInputStorageFileDetails,
+                                        all_fields=True)
+class InputStorageFileDetails:
+    pass
+
+@strawberry.experimental.pydantic.type(model=StorageFile, all_fields=True)
+class StorageFileType:
+    pass

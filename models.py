@@ -1,10 +1,10 @@
 from datetime import datetime
 from enum import StrEnum, auto
-from typing import Any, List
+from typing import Any, List, Optional
 
 import strawberry
 from bson import ObjectId
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+from pydantic import BaseModel, Base64Bytes, Base64Str, ConfigDict, EmailStr, Field, field_validator
 from pydantic_core import core_schema
 from pytz import timezone
 
@@ -107,3 +107,52 @@ class CCRecruitment(BaseModel):
         str_strip_whitespace=True,
         validate_assignment=True,
     )
+
+
+class Base64Validator(BaseModel):
+    base64_bytes: Optional[Base64Bytes] = None
+    base64_str: Base64Str
+
+
+class StorageFile(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    title: str = ""
+    data: Base64Str | None = None
+    filetype: str = "pdf"
+    modified_time: str = ""
+    created_time: str = ""
+
+    @field_validator("data")
+    @classmethod
+    def validate_filedata(cls, value):
+        Base64Validator(base64_str=value).base64_str
+        return value
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        arbitrary_types_allowed=True,
+        extra="forbid",
+        str_strip_whitespace=True,
+        validate_assignment=True,
+    )
+
+class PyInputStorageFileDetails(BaseModel):
+    title: str
+    data: Base64Str | None = None
+    filetype: str = "pdf"
+
+    @field_validator("data")
+    @classmethod
+    def validate_filedata(cls, value):
+        Base64Validator(base64_str=value).base64_str
+        return value
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        arbitrary_types_allowed=True,
+        extra="forbid",
+        str_strip_whitespace=True,
+        validate_assignment=True,
+    )
+
+
