@@ -122,12 +122,6 @@ class StorageFile(BaseModel):
     modified_time: str = ""
     created_time: str = ""
 
-    @field_validator("data")
-    @classmethod
-    def validate_filedata(cls, value):
-        Base64Validator(base64_str=value).base64_str
-        return value
-
     model_config = ConfigDict(
         populate_by_name=True,
         arbitrary_types_allowed=True,

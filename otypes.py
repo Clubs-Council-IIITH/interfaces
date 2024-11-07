@@ -92,3 +92,8 @@ class InputStorageFileDetails:
 @strawberry.experimental.pydantic.type(model=StorageFile, all_fields=True)
 class StorageFileType:
     pass
+
+@strawberry.type
+class StorageFilesReturn:
+    id: str
+    title: str

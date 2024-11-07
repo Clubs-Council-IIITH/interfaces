@@ -8,7 +8,7 @@ from db import ccdb, filestoragedb
 from models import CCRecruitment, StorageFile
 
 # import all models and types
-from otypes import CCRecruitmentType, Info, SignedURL, StorageFileType
+from otypes import CCRecruitmentType, Info, SignedURL, StorageFileType, StorageFilesReturn
 
 
 # fetch signed url from the files service
@@ -64,11 +64,6 @@ def haveAppliedForCC(info: Info) -> bool:
 
 
 # Storagefile queries 
-
-@strawberry.type
-class StorageFilesReturn:
-    id: str
-    title: str
 
 @strawberry.field
 def storagefiles() -> List[StorageFilesReturn]:
