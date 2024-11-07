@@ -1,4 +1,6 @@
 import os
+import re
+from datetime import datetime
 
 import pytz
 import strawberry
@@ -15,8 +17,13 @@ from mailing_templates import (
 from models import CCRecruitment, StorageFile
 
 # import all models and types
-from otypes import CCRecruitmentInput, Info, MailInput, StorageFileType, InputStorageFileDetails
-
+from otypes import (
+    CCRecruitmentInput,
+    Info,
+    MailInput,
+    StorageFileInput,
+    StorageFileType,
+)
 
 inter_communication_secret_global = os.getenv("INTER_COMMUNICATION_SECRET")
 ist = pytz.timezone("Asia/Kolkata")
@@ -124,7 +131,9 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
 
 # StorageFile related mutations
 @strawberry.mutation
-def createStorageFile(details: InputStorageFileDetails, info: Info) -> StorageFileType:
+def createStorageFile(
+    details: StorageFileInput, info: Info
+) -> StorageFileType:
     """
     Create a new storagefile
     returns the created storagefile
@@ -145,7 +154,7 @@ def createStorageFile(details: InputStorageFileDetails, info: Info) -> StorageFi
         data=details.data,
         filetype=details.filetype,
         modified_time=time_str,
-        creation_time=time_str
+        creation_time=time_str,
     )
 
     # Check if any storagefile with same title already exists
@@ -166,7 +175,7 @@ def createStorageFile(details: InputStorageFileDetails, info: Info) -> StorageFi
 
 @strawberry.mutation
 def editStorageFile(
-    id: str, details: InputStorageFileDetails, info: Info
+    id: str, details: StorageFileInput, info: Info
 ) -> StorageFileType:
     """
     Edit an existing storagefile
@@ -188,11 +197,12 @@ def editStorageFile(
         raise ValueError("StorageFile not found.")
 
     edited_storagefile = StorageFile(
+        _id=id,
         title=details.title,
         data=details.data,
         filetype=details.filetype,
         modified_time=time_str,
-        creation_time=storagefile["creation_time"]
+        creation_time=storagefile["creation_time"],
     )
 
     filestoragedb.find_one_and_update(
