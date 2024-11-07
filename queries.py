@@ -8,7 +8,13 @@ from db import ccdb, filestoragedb
 from models import CCRecruitment, StorageFile
 
 # import all models and types
-from otypes import CCRecruitmentType, Info, SignedURL, StorageFileType, StorageFilesReturn
+from otypes import (
+    CCRecruitmentType,
+    Info,
+    SignedURL,
+    StorageFilesReturn,
+    StorageFileType,
+)
 
 
 # fetch signed url from the files service
@@ -63,7 +69,8 @@ def haveAppliedForCC(info: Info) -> bool:
     return False
 
 
-# Storagefile queries 
+# Storagefile queries
+
 
 @strawberry.field
 def storagefiles() -> List[StorageFilesReturn]:
@@ -73,10 +80,9 @@ def storagefiles() -> List[StorageFilesReturn]:
     """
     storage_files = filestoragedb.find()
     return [
-        StorageFileBasic(
-            id=str(storage_file["_id"]), 
-            title=storage_file["title"]
-        ) 
+        StorageFilesReturn(
+            id=str(storage_file["_id"]), title=storage_file["title"]
+        )
         for storage_file in storage_files
     ]
 
@@ -88,7 +94,10 @@ def storagefile(id: str) -> StorageFileType:
     returns a storagefile
     """
     storagefile = filestoragedb.find_one({"_id": id})
-    return StorageFileType.from_pydantic(StorageFile.model_validate(storagefile))
+    return StorageFileType.from_pydantic(
+        StorageFile.model_validate(storagefile)
+    )
+
 
 # register all queries
 queries = [
@@ -96,5 +105,5 @@ queries = [
     ccApplications,
     haveAppliedForCC,
     storagefiles,
-    storagefile
+    storagefile,
 ]
