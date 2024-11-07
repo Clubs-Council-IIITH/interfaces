@@ -1,16 +1,16 @@
 from datetime import datetime
 from enum import StrEnum, auto
-from typing import Any, List, Optional
+from typing import Any, List
 
 import strawberry
 from bson import ObjectId
 from pydantic import (
     Base64Bytes,
-    Base64Str,
     BaseModel,
     ConfigDict,
     EmailStr,
     Field,
+    TypeAdapter,
     field_validator,
 )
 from pydantic_core import core_schema
@@ -117,18 +117,23 @@ class CCRecruitment(BaseModel):
     )
 
 
-class Base64Validator(BaseModel):
-    base64_bytes: Optional[Base64Bytes] = None
-    base64_str: Base64Str
-
-
 class StorageFile(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     title: str
-    data: Base64Str
+    data: str
     filetype: str = "pdf"
     modified_time: str = ""
     creation_time: str = ""
+
+    @field_validator("data")
+    @classmethod
+    def validate_base64(cls, value):
+        try:
+            TypeAdapter(Base64Bytes).validate_python(value)
+        except ValueError:
+            raise ValueError("Invalid base64 string")
+        
+        return value
 
     model_config = ConfigDict(
         populate_by_name=True,
