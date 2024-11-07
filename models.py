@@ -4,7 +4,15 @@ from typing import Any, List, Optional
 
 import strawberry
 from bson import ObjectId
-from pydantic import BaseModel, Base64Bytes, Base64Str, ConfigDict, EmailStr, Field, field_validator
+from pydantic import (
+    Base64Bytes,
+    Base64Str,
+    BaseModel,
+    ConfigDict,
+    EmailStr,
+    Field,
+    field_validator,
+)
 from pydantic_core import core_schema
 from pytz import timezone
 
@@ -148,5 +156,3 @@ class PyInputStorageFileDetails(BaseModel):
         str_strip_whitespace=True,
         validate_assignment=True,
     )
-
-

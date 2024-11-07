@@ -3,9 +3,8 @@ import os
 import pytz
 import strawberry
 from fastapi.encoders import jsonable_encoder
-from datetime import datetime, timedelta
 
-from db import ccdb, filestoragedb 
+from db import ccdb, filestoragedb
 from mailing import send_mail
 from mailing_templates import (
     APPLICANT_CONFIRMATION_BODY,
@@ -149,14 +148,20 @@ def createStorageFile(details: InputStorageFileDetails, info: Info) -> StorageFi
         creation_time=time_str
     )
 
-    # Check if any storagefile on that day already exists
-    if filestoragedb.find_one({"title": str(details.title)}):
+    # Check if any storagefile with same title already exists
+    if filestoragedb.find_one(
+        {"title": {"$regex": f"^{re.escape(details.title)}$", "$options": "i"}}
+    ):
         raise ValueError("A storagefile already exists with this name.")
 
-    created_id = filestoragedb.insert_one(jsonable_encoder(storagefile)).inserted_id
+    created_id = filestoragedb.insert_one(
+        jsonable_encoder(storagefile)
+    ).inserted_id
     created_storagefile = filestoragedb.find_one({"_id": created_id})
 
-    return StorageFileType.from_pydantic(StorageFile.model_validate(created_storagefile))
+    return StorageFileType.from_pydantic(
+        StorageFile.model_validate(created_storagefile)
+    )
 
 
 @strawberry.mutation
@@ -195,7 +200,9 @@ def editStorageFile(
     )
     updated_storagefile = filestoragedb.find_one({"_id": id})
 
-    return StorageFileType.from_pydantic(StorageFile.model_validate(updated_storagefile))
+    return StorageFileType.from_pydantic(
+        StorageFile.model_validate(updated_storagefile)
+    )
 
 
 @strawberry.mutation
