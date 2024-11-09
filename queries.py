@@ -73,12 +73,12 @@ def haveAppliedForCC(info: Info) -> bool:
 
 
 @strawberry.field
-def storagefiles() -> List[StorageFilesReturn]:
+def storagefiles(filetype: str) -> List[StorageFilesReturn]:
     """
     Get all storage files
     Returns a list of storage files with basic info (id and title)
     """
-    storage_files = filestoragedb.find()
+    storage_files = filestoragedb.find({"filetype": filetype})
     return [
         StorageFilesReturn(
             id=str(storage_file["_id"]), title=storage_file["title"]
