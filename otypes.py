@@ -97,5 +97,5 @@ class StorageFileType:
 
 @strawberry.type
 class StorageFilesReturn:
-    id: str
+    _id: str
     title: str
