@@ -1,4 +1,5 @@
 import json
+import os
 from typing import List
 
 import requests
@@ -10,6 +11,8 @@ from models import CCRecruitment
 # import all models and types
 from otypes import CCRecruitmentType, Info, SignedURL
 
+inter_communication_secret = os.getenv("INTER_COMMUNICATION_SECRET")
+
 
 # fetch signed url from the files service
 @strawberry.field
@@ -20,7 +23,11 @@ def signedUploadURL(info: Info) -> SignedURL:
 
     # make request to files api
     response = requests.get(
-        "http://files/signed-url", params={"user": json.dumps(user)}
+        "http://files/signed-url",
+        params={
+            "user": json.dumps(user),
+            "inter_communication_secret": inter_communication_secret,
+        },
     )
 
     # error handling
