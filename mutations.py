@@ -151,7 +151,7 @@ def createStorageFile(
 
     storagefile = StorageFile(
         title=details.title,
-        data=details.data,
+        url=details.url,
         filetype=details.filetype,
         modified_time=time_str,
         creation_time=time_str,
@@ -199,7 +199,7 @@ def editStorageFile(
     edited_storagefile = StorageFile(
         _id=id,
         title=details.title,
-        data=details.data,
+        url=details.url,
         filetype=details.filetype,
         modified_time=time_str,
         creation_time=storagefile["creation_time"],

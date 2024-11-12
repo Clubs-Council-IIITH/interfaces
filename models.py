@@ -5,7 +5,6 @@ from typing import Any, List
 import strawberry
 from bson import ObjectId
 from pydantic import (
-    Base64Bytes,
     BaseModel,
     ConfigDict,
     EmailStr,
@@ -120,20 +119,10 @@ class CCRecruitment(BaseModel):
 class StorageFile(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     title: str
-    data: str
+    url: str
     filetype: str = "pdf"
     modified_time: str = ""
     creation_time: str = ""
-
-    @field_validator("data")
-    @classmethod
-    def validate_base64(cls, value):
-        try:
-            TypeAdapter(Base64Bytes).validate_python(value)
-        except ValueError:
-            raise ValueError("Invalid base64 string")
-        
-        return value
 
     model_config = ConfigDict(
         populate_by_name=True,

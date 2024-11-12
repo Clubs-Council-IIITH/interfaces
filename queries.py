@@ -12,6 +12,7 @@ from otypes import (
     CCRecruitmentType,
     Info,
     SignedURL,
+    SignedURLInput,
     StorageFilesReturn,
     StorageFileType,
 )
@@ -19,14 +20,19 @@ from otypes import (
 
 # fetch signed url from the files service
 @strawberry.field
-def signedUploadURL(info: Info) -> SignedURL:
+def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")
 
     # make request to files api
     response = requests.get(
-        "http://files/signed-url", params={"user": json.dumps(user)}
+        "http://files/signed-url",
+        params={
+            "user": json.dumps(user),
+            "static_file": details.static_file,
+            "filename": detailsfilename
+        }
     )
 
     # error handling

@@ -81,10 +81,13 @@ class CCRecruitmentType:
 class SignedURL:
     url: str
 
+class SignedURLInput:
+    static_file: bool = False
+    filename: str | None = None
 
 # StorageFile Types
 @strawberry.experimental.pydantic.input(
-    model=StorageFile, fields=["title", "data", "filetype"]
+    model=StorageFile, fields=["title", "url", "filetype"]
 )
 class StorageFileInput:
     pass
