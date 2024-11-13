@@ -1,4 +1,5 @@
 import json
+import os
 from typing import List
 
 import requests
@@ -17,6 +18,8 @@ from otypes import (
     StorageFileType,
 )
 
+inter_communication_secret_global = os.getenv("INTER_COMMUNICATION_SECRET")
+
 
 # fetch signed url from the files service
 @strawberry.field
@@ -30,8 +33,9 @@ def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
         "http://files/signed-url",
         params={
             "user": json.dumps(user),
-            "static_file": details.static_file,
+            "static_file": "true" if details.static_file else "false",
             "filename": details.filename,
+            "inter_communication_secret": inter_communication_secret_global,
         },
     )
 
