@@ -31,8 +31,8 @@ def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
         params={
             "user": json.dumps(user),
             "static_file": details.static_file,
-            "filename": detailsfilename
-        }
+            "filename": details.filename,
+        },
     )
 
     # error handling
@@ -87,7 +87,7 @@ def storagefiles(filetype: str) -> List[StorageFilesReturn]:
     storage_files = filestoragedb.find({"filetype": filetype})
     return [
         StorageFilesReturn(
-            id=str(storage_file["_id"]), title=storage_file["title"]
+            _id=str(storage_file["_id"]), title=storage_file["title"]
         )
         for storage_file in storage_files
     ]

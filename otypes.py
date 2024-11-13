@@ -81,6 +81,7 @@ class CCRecruitmentType:
 class SignedURL:
     url: str
 
+@strawberry.input
 class SignedURLInput:
     static_file: bool = False
     filename: str | None = None
