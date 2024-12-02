@@ -95,10 +95,23 @@ def storagefiles(filetype: str) -> List[StorageFileType]:
     ]
 
 
+@strawberry.field
+def storagefile(file_id: str) -> StorageFileType:
+    """
+    Get a single storage file by id
+    Returns a single storage file with all info
+    """
+    storage_file = filestoragedb.find_one({"_id": file_id})
+    return StorageFileType.from_pydantic(
+        StorageFile.model_validate(storage_file)
+    )
+
+
 # register all queries
 queries = [
     signedUploadURL,
     ccApplications,
     haveAppliedForCC,
     storagefiles,
+    storagefile,
 ]
