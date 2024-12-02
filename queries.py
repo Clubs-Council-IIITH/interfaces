@@ -83,30 +83,16 @@ def haveAppliedForCC(info: Info) -> bool:
 
 
 @strawberry.field
-def storagefiles(filetype: str) -> List[StorageFilesReturn]:
+def storagefiles(filetype: str) -> List[StorageFileType]:
     """
     Get all storage files
     Returns a list of storage files with basic info (id and title)
     """
     storage_files = filestoragedb.find({"filetype": filetype})
     return [
-        StorageFilesReturn(
-            _id=str(storage_file["_id"]), title=storage_file["title"]
-        )
+        StorageFileType.from_pydantic(StorageFile.model_validate(storage_file))
         for storage_file in storage_files
     ]
-
-
-@strawberry.field
-def storagefile(id: str) -> StorageFileType:
-    """
-    Get a storagefile by id
-    returns a storagefile
-    """
-    storagefile = filestoragedb.find_one({"_id": id})
-    return StorageFileType.from_pydantic(
-        StorageFile.model_validate(storagefile)
-    )
 
 
 # register all queries
@@ -115,5 +101,4 @@ queries = [
     ccApplications,
     haveAppliedForCC,
     storagefiles,
-    storagefile,
 ]

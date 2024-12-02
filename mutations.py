@@ -215,6 +215,7 @@ def editStorageFile(
     )
 
 
+
 @strawberry.mutation
 def deleteStorageFile(id: str, info: Info) -> bool:
     """
