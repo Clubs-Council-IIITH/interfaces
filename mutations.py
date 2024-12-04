@@ -174,12 +174,12 @@ def createStorageFile(
 
 
 @strawberry.mutation
-def editStorageFile(
-    id: str, details: StorageFileInput, info: Info
-) -> StorageFileType:
+def updateStorageFile(
+    id: str, info: Info
+) -> bool:
     """
-    Edit an existing storagefile
-    returns the edited storagefile
+    Update an existing storagefile
+    returns the updated storagefile
 
     Allowed Roles: ["cc"]
     """
@@ -196,23 +196,19 @@ def editStorageFile(
     if storagefile is None:
         raise ValueError("StorageFile not found.")
 
-    edited_storagefile = StorageFile(
+    updated_storagefile = StorageFile(
         _id=id,
-        title=details.title,
-        url=details.url,
-        filetype=details.filetype,
+        title=storagefile["title"],
+        url=storagefile["url"],
+        filetype=storagefile["filetype"],
         modified_time=time_str,
         creation_time=storagefile["creation_time"],
     )
 
     filestoragedb.find_one_and_update(
-        {"_id": id}, {"$set": jsonable_encoder(edited_storagefile)}
+        {"_id": id}, {"$set": jsonable_encoder(updated_storagefile)}
     )
-    updated_storagefile = filestoragedb.find_one({"_id": id})
-
-    return StorageFileType.from_pydantic(
-        StorageFile.model_validate(updated_storagefile)
-    )
+    return True
 
 
 @strawberry.mutation
@@ -241,6 +237,6 @@ mutations = [
     sendMail,
     ccApply,
     createStorageFile,
-    editStorageFile,
+    updateStorageFile,
     deleteStorageFile,
 ]
