@@ -14,7 +14,6 @@ from otypes import (
     Info,
     SignedURL,
     SignedURLInput,
-    StorageFilesReturn,
     StorageFileType,
 )
 
@@ -80,7 +79,6 @@ def haveAppliedForCC(info: Info) -> bool:
 
 
 # Storagefile queries
-
 
 @strawberry.field
 def storagefiles(filetype: str) -> List[StorageFileType]:

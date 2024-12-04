@@ -98,8 +98,3 @@ class StorageFileInput:
 class StorageFileType:
     pass
 
-
-@strawberry.type
-class StorageFilesReturn:
-    _id: str
-    title: str
