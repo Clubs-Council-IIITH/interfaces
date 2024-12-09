@@ -4,13 +4,7 @@ from typing import Any, List
 
 import strawberry
 from bson import ObjectId
-from pydantic import (
-    BaseModel,
-    ConfigDict,
-    EmailStr,
-    Field,
-    field_validator,
-)
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from pydantic_core import core_schema
 from pytz import timezone
 
