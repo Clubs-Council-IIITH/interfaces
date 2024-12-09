@@ -35,6 +35,7 @@ def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
             "static_file": "true" if details.static_file else "false",
             "filename": details.filename,
             "inter_communication_secret": inter_communication_secret,
+            "max_sizeMB": details.max_size_mb,
         },
     )
 

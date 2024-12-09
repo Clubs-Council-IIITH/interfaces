@@ -86,6 +86,7 @@ class SignedURL:
 class SignedURLInput:
     static_file: bool = False
     filename: str | None = None
+    max_size_mb: float = 0.3
 
 
 # StorageFile Types
