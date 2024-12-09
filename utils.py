@@ -4,6 +4,7 @@ import requests
 
 inter_communication_secret = os.getenv("INTER_COMMUNICATION_SECRET")
 
+
 def delete_file(filename):
     response = requests.post(
         "http://files/delete-file",

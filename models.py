@@ -9,7 +9,6 @@ from pydantic import (
     ConfigDict,
     EmailStr,
     Field,
-    TypeAdapter,
     field_validator,
 )
 from pydantic_core import core_schema
