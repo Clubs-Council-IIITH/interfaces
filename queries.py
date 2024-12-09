@@ -5,18 +5,24 @@ from typing import List
 import requests
 import strawberry
 
-from db import ccdb
-from models import CCRecruitment
+from db import ccdb, docsstoragedb
+from models import CCRecruitment, StorageFile
 
 # import all models and types
-from otypes import CCRecruitmentType, Info, SignedURL
+from otypes import (
+    CCRecruitmentType,
+    Info,
+    SignedURL,
+    SignedURLInput,
+    StorageFileType,
+)
 
 inter_communication_secret = os.getenv("INTER_COMMUNICATION_SECRET")
 
 
 # fetch signed url from the files service
 @strawberry.field
-def signedUploadURL(info: Info) -> SignedURL:
+def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")
@@ -26,6 +32,8 @@ def signedUploadURL(info: Info) -> SignedURL:
         "http://files/signed-url",
         params={
             "user": json.dumps(user),
+            "static_file": "true" if details.static_file else "false",
+            "filename": details.filename,
             "inter_communication_secret": inter_communication_secret,
         },
     )
@@ -70,9 +78,39 @@ def haveAppliedForCC(info: Info) -> bool:
     return False
 
 
+# Storagefile queries
+
+
+@strawberry.field
+def storagefiles(filetype: str) -> List[StorageFileType]:
+    """
+    Get all storage files
+    Returns a list of storage files with basic info (id and title)
+    """
+    storage_files = docsstoragedb.find({"filetype": filetype})
+    return [
+        StorageFileType.from_pydantic(StorageFile.model_validate(storage_file))
+        for storage_file in storage_files
+    ]
+
+
+@strawberry.field
+def storagefile(file_id: str) -> StorageFileType:
+    """
+    Get a single storage file by id
+    Returns a single storage file with all info
+    """
+    storage_file = docsstoragedb.find_one({"_id": file_id})
+    return StorageFileType.from_pydantic(
+        StorageFile.model_validate(storage_file)
+    )
+
+
 # register all queries
 queries = [
     signedUploadURL,
     ccApplications,
     haveAppliedForCC,
+    storagefiles,
+    storagefile,
 ]

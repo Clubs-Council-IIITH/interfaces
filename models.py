@@ -4,7 +4,14 @@ from typing import Any, List
 
 import strawberry
 from bson import ObjectId
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    EmailStr,
+    Field,
+    TypeAdapter,
+    field_validator,
+)
 from pydantic_core import core_schema
 from pytz import timezone
 
@@ -99,6 +106,23 @@ class CCRecruitment(BaseModel):
     good_fit: str = Field()
 
     sent_time: datetime = Field(default_factory=create_utc_time, frozen=True)
+
+    model_config = ConfigDict(
+        populate_by_name=True,
+        arbitrary_types_allowed=True,
+        extra="forbid",
+        str_strip_whitespace=True,
+        validate_assignment=True,
+    )
+
+
+class StorageFile(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    title: str
+    filename: str
+    filetype: str = "pdf"
+    modified_time: str = ""
+    creation_time: str = ""
 
     model_config = ConfigDict(
         populate_by_name=True,
