@@ -5,7 +5,7 @@ from typing import List
 import requests
 import strawberry
 
-from db import ccdb, filestoragedb
+from db import ccdb, docsstoragedb
 from models import CCRecruitment, StorageFile
 
 # import all models and types
@@ -80,13 +80,14 @@ def haveAppliedForCC(info: Info) -> bool:
 
 # Storagefile queries
 
+
 @strawberry.field
 def storagefiles(filetype: str) -> List[StorageFileType]:
     """
     Get all storage files
     Returns a list of storage files with basic info (id and title)
     """
-    storage_files = filestoragedb.find({"filetype": filetype})
+    storage_files = docsstoragedb.find({"filetype": filetype})
     return [
         StorageFileType.from_pydantic(StorageFile.model_validate(storage_file))
         for storage_file in storage_files
@@ -99,7 +100,7 @@ def storagefile(file_id: str) -> StorageFileType:
     Get a single storage file by id
     Returns a single storage file with all info
     """
-    storage_file = filestoragedb.find_one({"_id": file_id})
+    storage_file = docsstoragedb.find_one({"_id": file_id})
     return StorageFileType.from_pydantic(
         StorageFile.model_validate(storage_file)
     )

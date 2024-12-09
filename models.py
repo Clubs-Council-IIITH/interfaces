@@ -119,7 +119,7 @@ class CCRecruitment(BaseModel):
 class StorageFile(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     title: str
-    url: str
+    filename: str
     filetype: str = "pdf"
     modified_time: str = ""
     creation_time: str = ""
