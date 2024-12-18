@@ -215,7 +215,7 @@ def deleteStorageFile(id: str, info: Info) -> bool:
         raise ValueError("StorageFile not found.")
 
     # delete the file from storage
-    delete_file(storagefile["filename"])
+    # delete_file(storagefile["filename"])
 
     docsstoragedb.delete_one({"_id": id})
     return True
