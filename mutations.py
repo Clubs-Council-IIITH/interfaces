@@ -188,6 +188,7 @@ def updateStorageFile(id: str, version: int, info: Info) -> bool:
         filename=storagefile["filename"],
         filetype=storagefile["filetype"],
         modified_time=get_curr_time_str(),
+        creation_time=storagefile["creation_time"],
         latest_version=version,
     )
 
