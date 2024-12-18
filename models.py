@@ -6,11 +6,8 @@ import strawberry
 from bson import ObjectId
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 from pydantic_core import core_schema
-from pytz import timezone
 
-
-def create_utc_time():
-    return datetime.now(timezone("UTC"))
+from utils import get_curr_time_str, get_utc_time
 
 
 # for handling mongo ObjectIds
@@ -47,7 +44,7 @@ class Mails(BaseModel):
     cc_recipients: List[EmailStr] = Field([])
     html_body: bool = Field(default=False)
 
-    sent_time: datetime = Field(default_factory=create_utc_time, frozen=True)
+    sent_time: datetime = Field(default_factory=get_utc_time, frozen=True)
 
     @field_validator("to_recipients")
     @classmethod
@@ -98,7 +95,7 @@ class CCRecruitment(BaseModel):
     other_bodies: str | None = None
     good_fit: str = Field()
 
-    sent_time: datetime = Field(default_factory=create_utc_time, frozen=True)
+    sent_time: datetime = Field(default_factory=get_utc_time, frozen=True)
 
     model_config = ConfigDict(
         populate_by_name=True,
@@ -111,11 +108,22 @@ class CCRecruitment(BaseModel):
 
 class StorageFile(BaseModel):
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
-    title: str
-    filename: str
+    title: str = Field(
+        ...,
+        max_length=100,
+        min_length=2,
+    )
+
+    filename: str = Field(
+        ...,
+        max_length=125,
+        min_length=2,
+    )
     filetype: str = "pdf"
-    modified_time: str = ""
-    creation_time: str = ""
+    latest_version: int = 1
+
+    modified_time: str = Field(default_factory=get_curr_time_str)
+    creation_time: str = Field(default_factory=get_curr_time_str, frozen=True)
 
     model_config = ConfigDict(
         populate_by_name=True,

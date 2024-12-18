@@ -1,8 +1,6 @@
 import os
 import re
-from datetime import datetime
 
-import pytz
 import strawberry
 from fastapi.encoders import jsonable_encoder
 
@@ -24,10 +22,9 @@ from otypes import (
     StorageFileInput,
     StorageFileType,
 )
-from utils import delete_file
+from utils import delete_file, get_curr_time_str
 
 inter_communication_secret_global = os.getenv("INTER_COMMUNICATION_SECRET")
-ist = pytz.timezone("Asia/Kolkata")
 
 
 # sample mutation
@@ -146,16 +143,10 @@ def createStorageFile(
     if user is None or user.get("role") != "cc":
         raise ValueError("You do not have permission to access this resource.")
 
-    # get time info
-    current_time = datetime.now(ist)
-    time_str = current_time.strftime("%d-%m-%Y %I:%M %p IST")
-
     storagefile = StorageFile(
         title=details.title,
         filename=details.filename,
         filetype=details.filetype,
-        modified_time=time_str,
-        creation_time=time_str,
     )
 
     # Check if any storagefile with same title already exists
@@ -175,7 +166,7 @@ def createStorageFile(
 
 
 @strawberry.mutation
-def updateStorageFile(id: str, info: Info) -> bool:
+def updateStorageFile(id: str, version: int, info: Info) -> bool:
     """
     Update an existing storagefile
     returns the updated storagefile
@@ -187,10 +178,6 @@ def updateStorageFile(id: str, info: Info) -> bool:
     if user is None or user.get("role") != "cc":
         raise ValueError("You do not have permission to access this resource.")
 
-    # get time info
-    current_time = datetime.now(ist)
-    time_str = current_time.strftime("%d-%m-%Y %I:%M %p IST")
-
     storagefile = docsstoragedb.find_one({"_id": id})
     if storagefile is None:
         raise ValueError("StorageFile not found.")
@@ -200,8 +187,8 @@ def updateStorageFile(id: str, info: Info) -> bool:
         title=storagefile["title"],
         filename=storagefile["filename"],
         filetype=storagefile["filetype"],
-        modified_time=time_str,
-        creation_time=storagefile["creation_time"],
+        modified_time=get_curr_time_str(),
+        latest_version=version,
     )
 
     docsstoragedb.find_one_and_update(
