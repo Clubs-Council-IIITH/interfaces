@@ -22,7 +22,7 @@ from otypes import (
     StorageFileInput,
     StorageFileType,
 )
-from utils import delete_file, get_curr_time_str
+from utils import get_curr_time_str
 
 inter_communication_secret_global = os.getenv("INTER_COMMUNICATION_SECRET")
 
