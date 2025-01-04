@@ -1,3 +1,22 @@
+"""
+Types and Inputs
+
+It contains both Inputs and Types for taking inputs and returning outputs.
+It also contains the Context class which is used to pass the user details to the resolvers.
+
+Types:
+    Info : used to pass the user details to the resolvers.
+    PyObjectId : used to return ObjectId of a document.
+    MailReturnType : used to return the subject and uid of a mail.
+    CCRecruitmentType : used to return all the details of a CCRecruitment.
+    SignedURL : used to return the signed url of a file.
+
+Inputs:
+    MailInput : used to input subject, body, to_recipients, cc_recipients(Optional), uid(Optional) and html_body(Optional) fields of the mail.
+    CCRecruitmentInput : used to all the fields of the CCRecruitment except 'sent_time' and 'id' fields.
+    
+"""
+
 import json
 from functools import cached_property
 from typing import Dict, List, Optional, Union

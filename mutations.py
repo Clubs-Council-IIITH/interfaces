@@ -1,3 +1,13 @@
+"""
+Mutation Resolvers
+
+This file contains the mutation resolvers for the GraphQL API.
+
+It defines the following mutation resolvers:
+    sendMail: Sends an email.
+    ccApply: Applies for CC.
+"""
+
 import os
 
 import strawberry
@@ -26,6 +36,22 @@ def sendMail(
     mailInput: MailInput,
     inter_communication_secret: str | None = None,
 ) -> bool:
+    """
+    Resolver that initiates the sending of an email.
+
+    Inputs:    
+        info (Info): The context object containing the request information.
+        mailInput (MailInput): The input data for sending an email.
+        inter_communication_secret (str | None, optional): The secret key for inter-communication. Defaults to None.
+
+    Returns:
+        bool: True if the email is sent successfully, False otherwise.
+
+    Raises Exception:
+        Not Authenticated: If the user is not authenticated.
+        Authentication Error: If the inter communication secret fails.
+    """
+
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")
@@ -71,6 +97,25 @@ def sendMail(
 
 @strawberry.mutation
 def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
+    """
+    This method is used to apply for CC
+
+    This method is invoked when a user applies for CC.
+    It send mails to the user and the CC admins ragarding the application.
+
+    Inputs:
+        ccRecruitmentInput (CCRecruitmentInput): The input data for applying for CC.
+        info (Info): contains the user information.
+
+    Returns:
+        bool: True if the application is successful, False otherwise.
+
+    Raises Exception:
+        Not Authenticated: If the user is not authenticated.
+        Not logged in: If the user is not logged in.
+        You have already applied: If the user has already applied for CC.
+    """
+
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")

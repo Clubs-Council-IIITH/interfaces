@@ -1,3 +1,15 @@
+"""
+Subjects for mails
+
+This file contains the information and the format in which the automated mails should be sent.
+The subject and body of the mail is stored in a template format.
+The template is a string with placeholders for the information to be filled in.
+
+The different templates are:
+    Application Confirmation email: email sent to applicant after successful application.
+    CC Application Confirmation email: email sent to CC after successful application.
+"""
+
 from string import Template
 
 APPLICANT_CONFIRMATION_SUBJECT = Template(
