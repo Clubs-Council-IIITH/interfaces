@@ -1,14 +1,3 @@
-"""
-Data Models for Interfaces Microservice
-
-This file decides what information should be passed in the email to the user and CC.
-It has modeks which store information related to recruitment for CC.
-
-It defines the following models:
-    Mails: Represents the email to be sent to the user.
-    CCRecruitment: Represents the recruitment information to be sent to the CC.
-"""
-
 from datetime import datetime
 from enum import StrEnum, auto
 from typing import Any, List
@@ -21,32 +10,19 @@ from pytz import timezone
 
 
 def create_utc_time():
+    """
+    Returns the current time according to UTC timezone.
+    """
     return datetime.now(timezone("UTC"))
 
 
 class PyObjectId(ObjectId):
     """
-    MongoDB ObjectId handler
-
-    This class contains clasmethods to validate and serialize ObjectIds.
-    ObjectIds of documents under the Clubs collection are stored under the 'id' field.
+    Class for handling MongoDB document ObjectIds for 'id' fields in Models.
     """
 
     @classmethod
     def __get_pydantic_core_schema__(cls, source_type: Any, handler):
-        """
-        Defines custom schema for Pydantic validation
-
-        This method is used to define the schema for the Pydantic model.
-
-        Args:
-            source_type (Any): The source type.
-            handler: The handler.
-
-        Returns:
-            dict: The schema for the Pydantic model.
-        """
-
         return core_schema.union_schema(
             [
                 # check if it's an instance first before doing any further work
@@ -58,59 +34,29 @@ class PyObjectId(ObjectId):
 
     @classmethod
     def validate(cls, v):
-        """
-        Validates the given ObjectId
-
-        Args:
-            v (Any): The value to validate.
-
-        Returns:
-            ObjectId: The validated ObjectId.
-
-        Raises:
-            ValueError: If the given value is not a valid ObjectId.
-        """
         if not ObjectId.is_valid(v):
             raise ValueError("Invalid ObjectId")
         return ObjectId(v)
 
     @classmethod
     def __get_pydantic_json_schema__(cls, field_schema):
-        """
-        Generates JSON schema
-
-        This method is used to generate the JSON schema for the Pydantic model.
-
-        Args:
-            field_schema (dict): The field schema.
-        """
-        
         field_schema.update(type="string")
 
 
 # sample pydantic model
 class Mails(BaseModel):
     """
-    Model for emails
-
-    This model is used to store the email information to be sent.
-
+    Model for Mails
+    
     Attributes:
-        id (PyObjectId): stores the ObjectId of the document.
-        uid (str): stores the uid of the user.
-        subject (str): stores the subject of the email.
-        body (str): stores the body of the email.
-        to_recipients (List[EmailStr]): stores the list of 'to' emails.
-        cc_recipients (List[EmailStr]): stores the list of 'cc' emails.
-        html_body (bool): Whether the email body is in HTML format.
-        sent_time (datetime): stores the time when the email was sent.
-
-    Validation:
-        to_recipients: Ensures that there are no duplicate emails in the 'to' list.
-        cc_recipients: Ensures that there are no duplicate emails in the 'cc' list.
-
-    Raises:
-        ValueError: If there are duplicate emails in the 'to' or 'cc' lists.
+        id (PyObjectId): Unique ObjectId of the document.
+        uid (str): User id.
+        subject (str): Subject of the mail.
+        body (str): Body of the mail.
+        to_recipients (List[EmailStr]): List of 'to' recipients.
+        cc_recipients (List[EmailStr]): List of 'cc' recipients.
+        html_body (bool): Whether the body is in HTML or not.
+        sent_time (datetime): Time when the mail was sent.
     """
 
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
@@ -127,6 +73,9 @@ class Mails(BaseModel):
     @classmethod
     # validates the to_recipients field
     def validate_unique_to(cls, value):
+        """
+        Validates the 'to_recipients' field to check for duplicate emails.
+        """
         if len(value) != len(set(value)):
             raise ValueError(
                 "Duplicate Emails are not allowed in 'to_recipients'"
@@ -137,6 +86,9 @@ class Mails(BaseModel):
     @classmethod
     # validates the cc_recipients field
     def validate_unique_cc(cls, value):
+        """
+        Validates the 'cc_recipients' field to check for duplicate emails.
+        """
         if len(value) != len(set(value)):
             raise ValueError(
                 "Duplicate Emails are not allowed in 'cc_recipients'"
@@ -154,6 +106,9 @@ class Mails(BaseModel):
 # Enum for storing category of the team for the recruit
 @strawberry.enum
 class Team(StrEnum):
+    """
+    Enum for storing category of team for the recruit.
+    """
     Design = auto()
     Finance = auto()
     Logistics = auto()
@@ -164,20 +119,18 @@ class CCRecruitment(BaseModel):
     """
     Model for CC Recruitment form
 
-    This model is used to store the CC Recruitment form answer information.
-
     Attributes:
-        id (PyObjectId): stores the ObjectId of the document.
-        uid (str): stores the uid of the user.
-        email (EmailStr): stores the email of the user.
-        teams (List[Team]): stores the list of teams the user is applying for.
-        design_experience (str): stores the design experience of the user.
-        why_this_position (str): stores the reason of the user for applying for this position.
-        why_cc (str): stores the reason for applying for CC.
-        ideas (str): stores the ideas of the user.
-        other_bodies (str): stores the other bodies the user is applying for.
-        good_fit (str): stores the reason theuser gives for him being a good fit for CC.
-        sent_time (datetime): stores the time when the form was sent.
+        id (PyObjectId): Unique ObjectId of the document.
+        uid (str): User id.
+        email (EmailStr): Email of the user.
+        teams (List[Team]): List of teams the user wants to apply for.
+        design_experience (str): Design experience of the user.
+        why_this_position (str): Why the user wants this position.
+        why_cc (str): Why the user wants to join CC.
+        ideas (str): Ideas the user has for CC.
+        other_bodies (str): Other bodies the user is a part of.
+        good_fit (str): Why the user is a good fit for CC.
+        sent_time (datetime): Time when the form was submitted.
     """
 
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")

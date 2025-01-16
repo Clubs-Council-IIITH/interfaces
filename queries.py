@@ -1,12 +1,5 @@
 """
 Query Resolvers
-
-This file contains the query resolvers for GraphQL.
-
-Resolvers:
-    signedUploadURL: Returns a signed URL for uploading a file to the files service.
-    ccApplications: Returns a list of all CC Applications.
-    haveAppliedForCC: Returns a boolean indicating whether the user has applied for CC.
 """
 
 import json
@@ -29,20 +22,17 @@ inter_communication_secret = os.getenv("INTER_COMMUNICATION_SECRET")
 @strawberry.field
 def signedUploadURL(info: Info) -> SignedURL:
     """
-    Used for uploading file to the files service.
+    Uploads file to the files service by any user.
 
-    Inputs:
-        Info: contains the user information.
+    Args:
+        Info: contains the user context information.
 
     Returns:
         SignedURL: A signed URL for uploading a file to the files service.
 
-    Accessibility:
-        Public(User need to login)
-
-    Raises Exception:
-        Not logged in: If the user is not logged in.
-        Exception: If the request to the files service fails.
+    Raises:
+        Exception: Not logged in!
+        Exception: If the request failed.
     """
 
     user = info.context.user
@@ -68,20 +58,17 @@ def signedUploadURL(info: Info) -> SignedURL:
 @strawberry.field
 def ccApplications(info: Info) -> List[CCRecruitmentType]:
     """
-    Returns list of all CC Applications.
+    Returns list of all CC Applications for CC.
 
-    Inputs:
-        Info: contains the user information.
+    Args:
+        Info: contains the user's context information.
 
     Returns:
         List[CCRecruitmentType]: A list of all CC Applications.
 
-    Accessibility:
-        Only CC can access.
-
-    Raises Exception:
-        Not logged in: If the user is not logged in.
-        Not Authenticated to access this API!!: If the user is not authenticated to access.
+    Raises:
+        Exception: Not logged in!
+        Exception: Not Authenticated to access this API!!
     """
 
     user = info.context.user
@@ -103,20 +90,17 @@ def ccApplications(info: Info) -> List[CCRecruitmentType]:
 @strawberry.field
 def haveAppliedForCC(info: Info) -> bool:
     """
-    Finds whether the logged in user has applied for CC.
+    Finds whether any logged in user has applied for CC.
 
-    Inputs:
-        Info: contains the user information.
+    Args:
+        Info: contains the user's context information.
 
     Returns:
         bool: True if the user has applied for CC, False otherwise.
 
-    Accessibility:
-        Only Public has full access.
-
-    Raises Exception:
-        Not logged in: If the user is not logged in.
-        Not Authenticated to access this API!!: If the user is not authenticated to access.
+    Raises:
+        Exception: Not logged in!
+        Exception: Not Authenticated to access this API!!
     """
 
     user = info.context.user

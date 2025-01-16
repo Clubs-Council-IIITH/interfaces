@@ -1,22 +1,3 @@
-"""
-Types and Inputs
-
-It contains both Inputs and Types for taking inputs and returning outputs.
-It also contains the Context class which is used to pass the user details to the resolvers.
-
-Types:
-    Info : used to pass the user details to the resolvers.
-    PyObjectId : used to return ObjectId of a document.
-    MailReturnType : used to return the subject and uid of a mail.
-    CCRecruitmentType : used to return all the details of a CCRecruitment.
-    SignedURL : used to return the signed url of a file.
-
-Inputs:
-    MailInput : used to input subject, body, to_recipients, cc_recipients(Optional), uid(Optional) and html_body(Optional) fields of the mail.
-    CCRecruitmentInput : used to all the fields of the CCRecruitment except 'sent_time' and 'id' fields.
-    
-"""
-
 import json
 from functools import cached_property
 from typing import Dict, List, Optional, Union
@@ -31,6 +12,9 @@ from models import CCRecruitment, Mails, PyObjectId
 
 # custom context class
 class Context(BaseContext):
+    """
+    Class provides user metadata and cookies from request headers, has methods for doing this.
+    """
     @cached_property
     def user(self) -> Union[Dict, None]:
         if not self.request:
@@ -48,10 +32,10 @@ class Context(BaseContext):
         return cookies
 
 
-# custom info type
+"""custom info Type for user metadata"""
 Info = _Info[Context, RootValueType]
 
-# serialize PyObjectId as a scalar type
+"""A scalar Type for serializing PyObjectId, used for id field"""
 PyObjectIdType = strawberry.scalar(
     PyObjectId, serialize=str, parse_value=lambda v: PyObjectId(v)
 )
@@ -59,6 +43,9 @@ PyObjectIdType = strawberry.scalar(
 
 @strawberry.experimental.pydantic.type(model=Mails, fields=["subject", "uid"])
 class MailReturnType:
+    """
+    Type used for returning the subject and uid of a mail.
+    """
     pass
 
 
@@ -66,6 +53,9 @@ class MailReturnType:
     model=Mails, fields=["subject", "body", "to_recipients"]
 )
 class MailInput:
+    """
+    Input used for taking subject, body and to recipients of a mail.
+    """
     cc_recipients: Optional[List[str]] = strawberry.UNSET
     uid: Optional[str] = strawberry.UNSET
     html_body: Optional[bool] = False
@@ -87,15 +77,24 @@ class MailInput:
     ],
 )
 class CCRecruitmentInput:
+    """
+    Input used for taking in answers of the recruitment form.
+    """
     pass
 
 
 @strawberry.experimental.pydantic.type(model=CCRecruitment, all_fields=True)
 class CCRecruitmentType:
+    """
+    Type used for returning the answers of the recruitment form.
+    """
     pass
 
 
 # signed url object type
 @strawberry.type
 class SignedURL:
+    """
+    Type used for returning the signed url of a file.
+    """
     url: str

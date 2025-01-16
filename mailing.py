@@ -1,13 +1,10 @@
 """
 Program to send email via Microsoft Graph API
 
-This program is used to send emails to applicants and CC.
-It is used to send emails to applicants and CC for confirmation of their application.
-
-Environment Variables:
+Attributes:
     TENANT_ID (str): Tenant ID for Microsoft Graph API.
     CLIENT_ID (str): Client ID for Microsoft Graph API.
-    CLIENT_SECRET (str):Client Secret for Microsoft Graph API.
+    CLIENT_SECRET (str): Client Secret for Microsoft Graph API.
     CLIENT_EMAIL (str): Client Email for Microsoft Graph API.
 """
 
@@ -25,12 +22,7 @@ CLIENT_EMAIL = os.environ.get("AD_CLIENT_EMAIL")
 
 def acquire_token():
     """
-    Acquire token via MSAL
-
-    This method is used to aquire tokens for Microsoft Graph API using environment variables.
-
-    Returns:
-        token (str): Token for Microsoft Graph API
+    Returns token aquired via MSAL
     """
 
     authority_url = f"https://login.microsoftonline.com/{TENANT_ID}/"
@@ -55,13 +47,11 @@ def send_mail(
     """
     Method to send email
 
-    This method is used to send emails.
-
     Args:
-        subject (str): The subject for an email.
-        body (str): The body of the email.
+        subject (str): subject for an email.
+        body (str): body of the email.
         to (list): The list of recipients for an email.
-        cc (list, optional): The list of recipients for an email. Defaults to [].
+        cc (list, optional): The list of recipients for an email. Defaults is empty.
         html_body (bool, optional): Whether the body is HTML or not. Defaults to False.
 
     Returns:

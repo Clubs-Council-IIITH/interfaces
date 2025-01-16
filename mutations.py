@@ -1,11 +1,5 @@
 """
 Mutation Resolvers
-
-This file contains the mutation resolvers for the GraphQL API.
-
-It defines the following mutation resolvers:
-    sendMail: Sends an email.
-    ccApply: Applies for CC.
 """
 
 import os
@@ -39,7 +33,7 @@ def sendMail(
     """
     Resolver that initiates the sending of an email.
 
-    Inputs:    
+    Args:    
         info (Info): The context object containing the request information.
         mailInput (MailInput): The input data for sending an email.
         inter_communication_secret (str | None, optional): The secret key for inter-communication. Defaults to None.
@@ -47,9 +41,9 @@ def sendMail(
     Returns:
         bool: True if the email is sent successfully, False otherwise.
 
-    Raises Exception:
-        Not Authenticated: If the user is not authenticated.
-        Authentication Error: If the inter communication secret fails.
+    Raises:
+        Exception: Not logged in!
+        Exception: Not Authenticated to access this API!!
     """
 
     user = info.context.user
@@ -103,17 +97,17 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
     This method is invoked when a user applies for CC.
     It send mails to the user and the CC admins ragarding the application.
 
-    Inputs:
+    Args:
         ccRecruitmentInput (CCRecruitmentInput): The input data for applying for CC.
-        info (Info): contains the user information.
+        info (Info): contains the user's context information.
 
     Returns:
         bool: True if the application is successful, False otherwise.
 
-    Raises Exception:
-        Not Authenticated: If the user is not authenticated.
-        Not logged in: If the user is not logged in.
-        You have already applied: If the user has already applied for CC.
+    Raises:
+        Exception: Not logged in!
+        Exception: Not Authenticated to access this API!!
+        Exception: You have already applied for CC!!
     """
 
     user = info.context.user
