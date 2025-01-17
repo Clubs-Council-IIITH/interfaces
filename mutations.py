@@ -103,7 +103,7 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
     This method is used to apply for CC
 
     This method is invoked when a user applies for CC.
-    It send mails to the user and the CC admins ragarding the application.
+    It send mails to the user and the CC admins regarding the application.
 
     Args:
         ccRecruitmentInput (CCRecruitmentInput): The input data for applying for CC.
@@ -172,10 +172,19 @@ def createStorageFile(
     details: StorageFileInput, info: Info
 ) -> StorageFileType:
     """
-    Create a new storagefile
-    returns the created storagefile
-
-    Allowed Roles: ["cc"]
+    Enables CC to create of a new storagefile
+    
+    Args:
+        details (StorageFileInput): The details of the storagefile to be created.
+        info (Info): contains the user's context information.
+    
+    Returns:
+        StorageFileType: The created storagefile.
+        
+    Raises:
+        ValueError: You do not have permission to access this resource.
+        ValueError: A storagefile already exists with this name.
+    
     """
     user = info.context.user
 
@@ -207,10 +216,19 @@ def createStorageFile(
 @strawberry.mutation
 def updateStorageFile(id: str, version: int, info: Info) -> bool:
     """
-    Update an existing storagefile
-    returns the updated storagefile
-
-    Allowed Roles: ["cc"]
+    Enables CC to update an existing storagefile
+    
+    Args:
+        id (str): The id of the storagefile to be updated.
+        version (int): The new version of the storagefile.
+        info (Info): contains the user's context information.
+        
+    Returns:
+        bool: True if the storagefile is updated successfully, False otherwise.
+        
+    Raises:
+        ValueError: You do not have permission to access this resource.
+        ValueError: StorageFile not found.
     """
     user = info.context.user
 
@@ -240,10 +258,18 @@ def updateStorageFile(id: str, version: int, info: Info) -> bool:
 @strawberry.mutation
 def deleteStorageFile(id: str, info: Info) -> bool:
     """
-    Delete an existing storagefile
-    returns a boolean indicating success
-
-    Allowed Roles: ["cc"]
+    Enables CC to delete an existing storagefile
+    
+    Args:
+        id (str): The id of the storagefile to be deleted.
+        info (Info): contains the user's context information.
+        
+    Returns:
+        bool: True if the storagefile is deleted successfully, False otherwise.
+        
+    Raises:
+        ValueError: You do not have permission to access this resource.
+        ValueError: StorageFile not found.
     """
     user = info.context.user
 

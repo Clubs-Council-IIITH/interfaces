@@ -102,6 +102,9 @@ class SignedURL:
 
 @strawberry.input
 class SignedURLInput:
+    """
+    Input used for taking details regarding size, name and format of a file.
+    """
     static_file: bool = False
     filename: str | None = None
     max_size_mb: float = 0.3
@@ -112,9 +115,15 @@ class SignedURLInput:
     model=StorageFile, fields=["title", "filename", "filetype"]
 )
 class StorageFileInput:
+    """
+    Input used for taking details regarding the file's title, name and type.
+    """
     pass
 
 
 @strawberry.experimental.pydantic.type(model=StorageFile, all_fields=True)
 class StorageFileType:
+    """
+    Input used for taking all the details regarding the file.
+    """
     pass

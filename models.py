@@ -152,6 +152,18 @@ class CCRecruitment(BaseModel):
 
 
 class StorageFile(BaseModel):
+    """
+    Model for files being stored
+    
+    Attributes:
+        id (PyObjectId): Unique ObjectId of the document.
+        title (str): Title of the file.
+        filename (str): Name of the file.
+        filetype (str): Type of the file.
+        latest_version (int): Latest version of the file.
+        modified_time (str): Time when the file was last modified.
+        creation_time (str): Time when the file was created.
+    """
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     title: str = Field(
         ...,

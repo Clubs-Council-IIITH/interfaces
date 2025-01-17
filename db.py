@@ -12,6 +12,7 @@ Attributes:
     client (MongoClient): MongoDB client.
     db (Database): MongoDB database.
     ccdb (Collection): MongoDB collection for Clubs Council.
+    docsstoragedb (Collection): MongoDB collection for storing documents.
 """
 
 from os import getenv
