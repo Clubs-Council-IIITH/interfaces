@@ -3,11 +3,12 @@ Mutation Resolvers
 """
 
 import os
+import re
 
 import strawberry
 from fastapi.encoders import jsonable_encoder
 
-from db import ccdb
+from db import ccdb, docsstoragedb
 from mailing import send_mail
 from mailing_templates import (
     APPLICANT_CONFIRMATION_BODY,
@@ -15,10 +16,17 @@ from mailing_templates import (
     CC_APPLICANT_CONFIRMATION_BODY,
     CC_APPLICANT_CONFIRMATION_SUBJECT,
 )
-from models import CCRecruitment
+from models import CCRecruitment, StorageFile
 
 # import all models and types
-from otypes import CCRecruitmentInput, Info, MailInput
+from otypes import (
+    CCRecruitmentInput,
+    Info,
+    MailInput,
+    StorageFileInput,
+    StorageFileType,
+)
+from utils import get_curr_time_str
 
 inter_communication_secret_global = os.getenv("INTER_COMMUNICATION_SECRET")
 
@@ -158,8 +166,106 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
     return True
 
 
+# StorageFile related mutations
+@strawberry.mutation
+def createStorageFile(
+    details: StorageFileInput, info: Info
+) -> StorageFileType:
+    """
+    Create a new storagefile
+    returns the created storagefile
+
+    Allowed Roles: ["cc"]
+    """
+    user = info.context.user
+
+    if user is None or user.get("role") != "cc":
+        raise ValueError("You do not have permission to access this resource.")
+
+    storagefile = StorageFile(
+        title=details.title,
+        filename=details.filename,
+        filetype=details.filetype,
+    )
+
+    # Check if any storagefile with same title already exists
+    if docsstoragedb.find_one(
+        {"title": {"$regex": f"^{re.escape(details.title)}$", "$options": "i"}}
+    ):
+        raise ValueError("A storagefile already exists with this name.")
+
+    created_id = docsstoragedb.insert_one(
+        jsonable_encoder(storagefile)
+    ).inserted_id
+    created_storagefile = docsstoragedb.find_one({"_id": created_id})
+
+    return StorageFileType.from_pydantic(
+        StorageFile.model_validate(created_storagefile)
+    )
+
+
+@strawberry.mutation
+def updateStorageFile(id: str, version: int, info: Info) -> bool:
+    """
+    Update an existing storagefile
+    returns the updated storagefile
+
+    Allowed Roles: ["cc"]
+    """
+    user = info.context.user
+
+    if user is None or user.get("role") != "cc":
+        raise ValueError("You do not have permission to access this resource.")
+
+    storagefile = docsstoragedb.find_one({"_id": id})
+    if storagefile is None:
+        raise ValueError("StorageFile not found.")
+
+    updated_storagefile = StorageFile(
+        _id=id,
+        title=storagefile["title"],
+        filename=storagefile["filename"],
+        filetype=storagefile["filetype"],
+        modified_time=get_curr_time_str(),
+        creation_time=storagefile["creation_time"],
+        latest_version=version,
+    )
+
+    docsstoragedb.find_one_and_update(
+        {"_id": id}, {"$set": jsonable_encoder(updated_storagefile)}
+    )
+    return True
+
+
+@strawberry.mutation
+def deleteStorageFile(id: str, info: Info) -> bool:
+    """
+    Delete an existing storagefile
+    returns a boolean indicating success
+
+    Allowed Roles: ["cc"]
+    """
+    user = info.context.user
+
+    if user is None or user.get("role") != "cc":
+        raise ValueError("You do not have permission to access this resource.")
+
+    storagefile = docsstoragedb.find_one({"_id": id})
+    if storagefile is None:
+        raise ValueError("StorageFile not found.")
+
+    # delete the file from storage
+    # delete_file(storagefile["filename"])
+
+    docsstoragedb.delete_one({"_id": id})
+    return True
+
+
 # register all mutations
 mutations = [
     sendMail,
     ccApply,
+    createStorageFile,
+    updateStorageFile,
+    deleteStorageFile,
 ]

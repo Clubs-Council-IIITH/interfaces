@@ -7,7 +7,7 @@ from strawberry.fastapi import BaseContext
 from strawberry.types import Info as _Info
 from strawberry.types.info import RootValueType
 
-from models import CCRecruitment, Mails, PyObjectId
+from models import CCRecruitment, Mails, PyObjectId, StorageFile
 
 
 # custom context class
@@ -98,3 +98,23 @@ class SignedURL:
     Type used for returning the signed url of a file.
     """
     url: str
+
+
+@strawberry.input
+class SignedURLInput:
+    static_file: bool = False
+    filename: str | None = None
+    max_size_mb: float = 0.3
+
+
+# StorageFile Types
+@strawberry.experimental.pydantic.input(
+    model=StorageFile, fields=["title", "filename", "filetype"]
+)
+class StorageFileInput:
+    pass
+
+
+@strawberry.experimental.pydantic.type(model=StorageFile, all_fields=True)
+class StorageFileType:
+    pass
