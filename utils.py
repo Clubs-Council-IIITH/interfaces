@@ -12,13 +12,13 @@ utc = pytz.timezone("UTC")
 def delete_file(filename):
     """
     Makes a request to delete a file from the files service
-    
+
     Args:
         filename (str): The name of the file to delete
-        
+
     Returns:
         str: The response from the files service
-        
+
     Raises:
         Exception: If the response is not successful
     """

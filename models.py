@@ -41,10 +41,10 @@ class PyObjectId(ObjectId):
 class Mails(BaseModel):
     """
     Model for Mails
-    
+
     Attributes:
         id (PyObjectId): Unique ObjectId of the document.
-        uid (str): User id.
+        uid (str): User id. Defaults to None.
         subject (str): Subject of the mail.
         body (str): Body of the mail.
         to_recipients (List[EmailStr]): List of 'to' recipients.
@@ -97,12 +97,14 @@ class Mails(BaseModel):
         validate_assignment=True,
     )
 
+
 # Enum for storing category of the team for the recruit
 @strawberry.enum
 class Team(StrEnum):
     """
     Enum for storing category of team for the recruit.
     """
+
     Design = auto()
     Finance = auto()
     Logistics = auto()
@@ -118,11 +120,11 @@ class CCRecruitment(BaseModel):
         uid (str): User id.
         email (EmailStr): Email of the user.
         teams (List[Team]): List of teams the user wants to apply for.
-        design_experience (str): Design experience of the user.
+        design_experience (str): Design experience of the user. Defaults to None.
         why_this_position (str): Why the user wants this position.
         why_cc (str): Why the user wants to join CC.
         ideas (str): Ideas the user has for CC.
-        other_bodies (str): Other bodies the user is a part of.
+        other_bodies (str): Other bodies the user is a part of. Defaults to None.
         good_fit (str): Why the user is a good fit for CC.
         sent_time (datetime): Time when the form was submitted.
     """
@@ -154,7 +156,7 @@ class CCRecruitment(BaseModel):
 class StorageFile(BaseModel):
     """
     Model for files being stored
-    
+
     Attributes:
         id (PyObjectId): Unique ObjectId of the document.
         title (str): Title of the file.
@@ -164,6 +166,7 @@ class StorageFile(BaseModel):
         modified_time (str): Time when the file was last modified.
         creation_time (str): Time when the file was created.
     """
+
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     title: str = Field(
         ...,

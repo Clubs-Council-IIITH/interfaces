@@ -51,13 +51,13 @@ def send_mail(
         subject (str): subject for an email.
         body (str): body of the email.
         to (list): The list of recipients for an email.
-        cc (list, optional): The list of recipients for an email. Defaults is empty.
+        cc (list, optional): The list of recipients for an email. Default is empty.
         html_body (bool, optional): Whether the body is HTML or not. Defaults to False.
 
     Returns:
         bool: Whether the email was sent successfully or not.
     """
-    
+
     client = GraphClient(acquire_token)
 
     if html_body:

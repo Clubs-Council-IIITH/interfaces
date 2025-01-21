@@ -71,7 +71,7 @@ def ccApplications(info: Info) -> List[CCRecruitmentType]:
 
     Args:
         info (Info): contains the user's context information.
-    
+
     Returns:
         List[CCRecruitmentType]: A list of all CC Applications.
 
@@ -131,10 +131,10 @@ def haveAppliedForCC(info: Info) -> bool:
 def storagefiles(filetype: str) -> List[StorageFileType]:
     """
     Gets all the storage files, has public access
-    
+
     Args:
         filetype (str): The type of file to get
-    
+
     Returns:
         List[StorageFileType]: A list of all storage files of the given type
     """
@@ -149,10 +149,10 @@ def storagefiles(filetype: str) -> List[StorageFileType]:
 def storagefile(file_id: str) -> StorageFileType:
     """
     Gets a single storage file by id, has public access
-    
+
     Args:
         file_id (str): The id of the file to get
-        
+
     Returns:
         StorageFileType: The storage file with the given id
     """

@@ -41,7 +41,7 @@ def sendMail(
     """
     Resolver that initiates the sending of an email.
 
-    Args:    
+    Args:
         info (Info): The context object containing the request information.
         mailInput (MailInput): The input data for sending an email.
         inter_communication_secret (str | None, optional): The secret key for inter-communication. Defaults to None.
@@ -173,18 +173,18 @@ def createStorageFile(
 ) -> StorageFileType:
     """
     Enables CC to create of a new storagefile
-    
+
     Args:
         details (StorageFileInput): The details of the storagefile to be created.
         info (Info): contains the user's context information.
-    
+
     Returns:
         StorageFileType: The created storagefile.
-        
+
     Raises:
         ValueError: You do not have permission to access this resource.
         ValueError: A storagefile already exists with this name.
-    
+
     """
     user = info.context.user
 
@@ -217,15 +217,15 @@ def createStorageFile(
 def updateStorageFile(id: str, version: int, info: Info) -> bool:
     """
     Enables CC to update an existing storagefile
-    
+
     Args:
         id (str): The id of the storagefile to be updated.
         version (int): The new version of the storagefile.
         info (Info): contains the user's context information.
-        
+
     Returns:
         bool: True if the storagefile is updated successfully, False otherwise.
-        
+
     Raises:
         ValueError: You do not have permission to access this resource.
         ValueError: StorageFile not found.
@@ -259,14 +259,14 @@ def updateStorageFile(id: str, version: int, info: Info) -> bool:
 def deleteStorageFile(id: str, info: Info) -> bool:
     """
     Enables CC to delete an existing storagefile
-    
+
     Args:
         id (str): The id of the storagefile to be deleted.
         info (Info): contains the user's context information.
-        
+
     Returns:
         bool: True if the storagefile is deleted successfully, False otherwise.
-        
+
     Raises:
         ValueError: You do not have permission to access this resource.
         ValueError: StorageFile not found.

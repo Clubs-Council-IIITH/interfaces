@@ -15,6 +15,7 @@ class Context(BaseContext):
     """
     Class provides user metadata and cookies from request headers, has methods for doing this.
     """
+
     @cached_property
     def user(self) -> Union[Dict, None]:
         if not self.request:
@@ -46,6 +47,7 @@ class MailReturnType:
     """
     Type used for returning the subject and uid of a mail.
     """
+
     pass
 
 
@@ -56,6 +58,7 @@ class MailInput:
     """
     Input used for taking subject, body and to recipients of a mail.
     """
+
     cc_recipients: Optional[List[str]] = strawberry.UNSET
     uid: Optional[str] = strawberry.UNSET
     html_body: Optional[bool] = False
@@ -80,6 +83,7 @@ class CCRecruitmentInput:
     """
     Input used for taking in answers of the recruitment form.
     """
+
     pass
 
 
@@ -88,6 +92,7 @@ class CCRecruitmentType:
     """
     Type used for returning the answers of the recruitment form.
     """
+
     pass
 
 
@@ -97,6 +102,7 @@ class SignedURL:
     """
     Type used for returning the signed url of a file.
     """
+
     url: str
 
 
@@ -105,6 +111,7 @@ class SignedURLInput:
     """
     Input used for taking details regarding size, name and format of a file.
     """
+
     static_file: bool = False
     filename: str | None = None
     max_size_mb: float = 0.3
@@ -118,6 +125,7 @@ class StorageFileInput:
     """
     Input used for taking details regarding the file's title, name and type.
     """
+
     pass
 
 
@@ -126,4 +134,5 @@ class StorageFileType:
     """
     Input used for taking all the details regarding the file.
     """
+
     pass
