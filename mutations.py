@@ -44,7 +44,8 @@ def sendMail(
     Args:
         info (Info): The context object containing the request information.
         mailInput (MailInput): The input data for sending an email.
-        inter_communication_secret (str | None, optional): The secret key                                     for inter-communication. Defaults to None.
+        inter_communication_secret (str | None, optional): The secret key
+                                for inter-communication. Defaults to None.
 
     Returns:
         bool: True if the email is sent successfully, False otherwise.
