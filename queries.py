@@ -1,3 +1,7 @@
+"""
+Query Resolvers
+"""
+
 import json
 import os
 from typing import List
@@ -23,6 +27,21 @@ inter_communication_secret = os.getenv("INTER_COMMUNICATION_SECRET")
 # fetch signed url from the files service
 @strawberry.field
 def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
+    """
+    Uploads file to the files service by any user.
+
+    Args:
+        details (SignedURLInput): contains the details of the file to be 
+                                  uploaded
+        info (Info): contains the user's context information.
+
+    Returns:
+        SignedURL: A signed URL for uploading a file to the files service.
+
+    Raises:
+        Exception: Not logged in!
+        Exception: If the request failed.
+    """
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")
@@ -48,6 +67,20 @@ def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
 
 @strawberry.field
 def ccApplications(info: Info) -> List[CCRecruitmentType]:
+    """
+    Returns list of all CC Applications for CC.
+
+    Args:
+        info (Info): contains the user's context information.
+
+    Returns:
+        List[CCRecruitmentType]: A list of all CC Applications.
+
+    Raises:
+        Exception: Not logged in!
+        Exception: Not Authenticated to access this API!!
+    """
+
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")
@@ -66,6 +99,19 @@ def ccApplications(info: Info) -> List[CCRecruitmentType]:
 
 @strawberry.field
 def haveAppliedForCC(info: Info) -> bool:
+    """
+    Finds whether any logged in user has applied for CC.
+
+    Args:
+        info (Info): contains the user's context information.
+    Returns:
+        bool: True if the user has applied for CC, False otherwise.
+
+    Raises:
+        Exception: Not logged in!
+        Exception: Not Authenticated to access this API!!
+    """
+
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")
@@ -85,8 +131,13 @@ def haveAppliedForCC(info: Info) -> bool:
 @strawberry.field
 def storagefiles(filetype: str) -> List[StorageFileType]:
     """
-    Get all storage files
-    Returns a list of storage files with basic info (id and title)
+    Gets all the storage files, has public access
+
+    Args:
+        filetype (str): The type of file to get
+
+    Returns:
+        List[StorageFileType]: A list of all storage files of the given type
     """
     storage_files = docsstoragedb.find({"filetype": filetype})
     return [
@@ -98,8 +149,13 @@ def storagefiles(filetype: str) -> List[StorageFileType]:
 @strawberry.field
 def storagefile(file_id: str) -> StorageFileType:
     """
-    Get a single storage file by id
-    Returns a single storage file with all info
+    Gets a single storage file by id, has public access
+
+    Args:
+        file_id (str): The id of the file to get
+
+    Returns:
+        StorageFileType: The storage file with the given id
     """
     storage_file = docsstoragedb.find_one({"_id": file_id})
     return StorageFileType.from_pydantic(

@@ -10,6 +10,18 @@ utc = pytz.timezone("UTC")
 
 
 def delete_file(filename):
+    """
+    Makes a request to delete a file from the files service
+
+    Args:
+        filename (str): The name of the file to delete
+
+    Returns:
+        str: The response from the files service
+
+    Raises:
+        Exception: If the response is not successful
+    """
     response = requests.post(
         "http://files/delete-file",
         params={
@@ -26,8 +38,14 @@ def delete_file(filename):
 
 
 def get_utc_time():
+    """
+    Returns current time according to UTC timezone
+    """
     return datetime.now(utc)
 
 
 def get_curr_time_str():
+    """
+    Returns current IST time in YYYY-MM-DD HH:MM:SS format
+    """
     return datetime.now(ist).strftime("%Y-%m-%d %H:%M:%S")

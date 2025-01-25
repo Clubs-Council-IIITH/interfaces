@@ -12,6 +12,11 @@ from models import CCRecruitment, Mails, PyObjectId, StorageFile
 
 # custom context class
 class Context(BaseContext):
+    """
+    Class provides user metadata and cookies from request headers, has 
+    methods for doing this.
+    """
+
     @cached_property
     def user(self) -> Union[Dict, None]:
         if not self.request:
@@ -29,10 +34,10 @@ class Context(BaseContext):
         return cookies
 
 
-# custom info type
+"""custom info Type for user metadata"""
 Info = _Info[Context, RootValueType]
 
-# serialize PyObjectId as a scalar type
+"""A scalar Type for serializing PyObjectId, used for id field"""
 PyObjectIdType = strawberry.scalar(
     PyObjectId, serialize=str, parse_value=lambda v: PyObjectId(v)
 )
@@ -40,6 +45,10 @@ PyObjectIdType = strawberry.scalar(
 
 @strawberry.experimental.pydantic.type(model=Mails, fields=["subject", "uid"])
 class MailReturnType:
+    """
+    Type used for returning the subject and uid of a mail.
+    """
+
     pass
 
 
@@ -47,6 +56,10 @@ class MailReturnType:
     model=Mails, fields=["subject", "body", "to_recipients"]
 )
 class MailInput:
+    """
+    Input used for taking subject, body and to recipients of a mail.
+    """
+
     cc_recipients: Optional[List[str]] = strawberry.UNSET
     uid: Optional[str] = strawberry.UNSET
     html_body: Optional[bool] = False
@@ -68,22 +81,38 @@ class MailInput:
     ],
 )
 class CCRecruitmentInput:
+    """
+    Input used for taking in answers of the recruitment form.
+    """
+
     pass
 
 
 @strawberry.experimental.pydantic.type(model=CCRecruitment, all_fields=True)
 class CCRecruitmentType:
+    """
+    Type used for returning the answers of the recruitment form.
+    """
+
     pass
 
 
 # signed url object type
 @strawberry.type
 class SignedURL:
+    """
+    Type used for returning the signed url of a file.
+    """
+
     url: str
 
 
 @strawberry.input
 class SignedURLInput:
+    """
+    Input used for taking details regarding size, name and format of a file.
+    """
+
     static_file: bool = False
     filename: str | None = None
     max_size_mb: float = 0.3
@@ -94,9 +123,17 @@ class SignedURLInput:
     model=StorageFile, fields=["title", "filename", "filetype"]
 )
 class StorageFileInput:
+    """
+    Input used for taking details regarding the file's title, name and type.
+    """
+
     pass
 
 
 @strawberry.experimental.pydantic.type(model=StorageFile, all_fields=True)
 class StorageFileType:
+    """
+    Input used for taking all the details regarding the file.
+    """
+
     pass

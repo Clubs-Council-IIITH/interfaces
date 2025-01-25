@@ -1,3 +1,13 @@
+"""
+Program to send email via Microsoft Graph API
+
+Attributes:
+    TENANT_ID (str): Tenant ID for Microsoft Graph API.
+    CLIENT_ID (str): Client ID for Microsoft Graph API.
+    CLIENT_SECRET (str): Client Secret for Microsoft Graph API.
+    CLIENT_EMAIL (str): Client Email for Microsoft Graph API.
+"""
+
 import os
 
 import msal
@@ -12,8 +22,9 @@ CLIENT_EMAIL = os.environ.get("AD_CLIENT_EMAIL")
 
 def acquire_token():
     """
-    Acquire token via MSAL
+    Returns token aquired via MSAL
     """
+
     authority_url = f"https://login.microsoftonline.com/{TENANT_ID}/"
     app = msal.ConfidentialClientApplication(
         authority=authority_url,
@@ -33,7 +44,22 @@ def send_mail(
     cc: list = [],
     html_body: bool | None = False,
 ):
-    # try:
+    """
+    Method to send email
+
+    Args:
+        subject (str): subject for an email.
+        body (str): body of the email.
+        to (list): The list of recipients for an email.
+        cc (list, optional): The list of recipients for an email. Default is 
+                             empty.
+        html_body (bool, optional): Whether the body is HTML or not. 
+                                    Defaults to False.
+
+    Returns:
+        bool: Whether the email was sent successfully or not.
+    """
+
     client = GraphClient(acquire_token)
 
     if html_body:

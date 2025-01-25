@@ -1,3 +1,7 @@
+"""
+Mutation Resolvers
+"""
+
 import os
 import re
 
@@ -34,6 +38,22 @@ def sendMail(
     mailInput: MailInput,
     inter_communication_secret: str | None = None,
 ) -> bool:
+    """
+    Resolver that initiates the sending of an email.
+
+    Args:
+        info (Info): The context object containing the request information.
+        mailInput (MailInput): The input data for sending an email.
+        inter_communication_secret (str | None, optional): The secret key                                     for inter-communication. Defaults to None.
+
+    Returns:
+        bool: True if the email is sent successfully, False otherwise.
+
+    Raises:
+        Exception: Not logged in!
+        Exception: Not Authenticated to access this API!!
+    """
+
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")
@@ -79,6 +99,26 @@ def sendMail(
 
 @strawberry.mutation
 def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
+    """
+    This method is used to apply for CC
+
+    This method is invoked when a user applies for CC.
+    It send mails to the user and the CC admins regarding the application.
+
+    Args:
+        ccRecruitmentInput (CCRecruitmentInput): The input data for applying
+                                                 for CC.
+        info (Info): contains the user's context information.
+
+    Returns:
+        bool: True if the application is successful, False otherwise.
+
+    Raises:
+        Exception: Not logged in!
+        Exception: Not Authenticated to access this API!!
+        Exception: You have already applied for CC!!
+    """
+
     user = info.context.user
     if not user:
         raise Exception("Not logged in!")
@@ -133,10 +173,20 @@ def createStorageFile(
     details: StorageFileInput, info: Info
 ) -> StorageFileType:
     """
-    Create a new storagefile
-    returns the created storagefile
+    Enables CC to create of a new storagefile
 
-    Allowed Roles: ["cc"]
+    Args:
+        details (StorageFileInput): The details of the storagefile to be 
+                                    created.
+        info (Info): contains the user's context information.
+
+    Returns:
+        StorageFileType: The created storagefile.
+
+    Raises:
+        ValueError: You do not have permission to access this resource.
+        ValueError: A storagefile already exists with this name.
+
     """
     user = info.context.user
 
@@ -168,10 +218,20 @@ def createStorageFile(
 @strawberry.mutation
 def updateStorageFile(id: str, version: int, info: Info) -> bool:
     """
-    Update an existing storagefile
-    returns the updated storagefile
+    Enables CC to update an existing storagefile
 
-    Allowed Roles: ["cc"]
+    Args:
+        id (str): The id of the storagefile to be updated.
+        version (int): The new version of the storagefile.
+        info (Info): contains the user's context information.
+
+    Returns:
+        bool: True if the storagefile is updated successfully, False 
+              otherwise.
+
+    Raises:
+        ValueError: You do not have permission to access this resource.
+        ValueError: StorageFile not found.
     """
     user = info.context.user
 
@@ -201,10 +261,19 @@ def updateStorageFile(id: str, version: int, info: Info) -> bool:
 @strawberry.mutation
 def deleteStorageFile(id: str, info: Info) -> bool:
     """
-    Delete an existing storagefile
-    returns a boolean indicating success
+    Enables CC to delete an existing storagefile
 
-    Allowed Roles: ["cc"]
+    Args:
+        id (str): The id of the storagefile to be deleted.
+        info (Info): contains the user's context information.
+
+    Returns:
+        bool: True if the storagefile is deleted successfully, False 
+              otherwise.
+
+    Raises:
+        ValueError: You do not have permission to access this resource.
+        ValueError: StorageFile not found.
     """
     user = info.context.user
 

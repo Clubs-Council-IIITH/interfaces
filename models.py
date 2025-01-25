@@ -10,8 +10,11 @@ from pydantic_core import core_schema
 from utils import get_curr_time_str, get_utc_time
 
 
-# for handling mongo ObjectIds
 class PyObjectId(ObjectId):
+    """
+    Class for handling MongoDB document ObjectIds for 'id' fields in Models.
+    """
+
     @classmethod
     def __get_pydantic_core_schema__(cls, source_type: Any, handler):
         return core_schema.union_schema(
@@ -36,6 +39,20 @@ class PyObjectId(ObjectId):
 
 # sample pydantic model
 class Mails(BaseModel):
+    """
+    Model for Mails
+
+    Attributes:
+        id (PyObjectId): Unique ObjectId of the document.
+        uid (str): User id. Defaults to None.
+        subject (str): Subject of the mail.
+        body (str): Body of the mail.
+        to_recipients (List[EmailStr]): List of 'to' recipients.
+        cc_recipients (List[EmailStr]): List of 'cc' recipients.
+        html_body (bool): Whether the body is in HTML or not.
+        sent_time (datetime): Time when the mail was sent.
+    """
+
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     uid: str | None = None
     subject: str = Field(..., max_length=100)
@@ -48,7 +65,11 @@ class Mails(BaseModel):
 
     @field_validator("to_recipients")
     @classmethod
+    # validates the to_recipients field
     def validate_unique_to(cls, value):
+        """
+        Validates the 'to_recipients' field to check for duplicate emails.
+        """
         if len(value) != len(set(value)):
             raise ValueError(
                 "Duplicate Emails are not allowed in 'to_recipients'"
@@ -57,7 +78,11 @@ class Mails(BaseModel):
 
     @field_validator("cc_recipients")
     @classmethod
+    # validates the cc_recipients field
     def validate_unique_cc(cls, value):
+        """
+        Validates the 'cc_recipients' field to check for duplicate emails.
+        """
         if len(value) != len(set(value)):
             raise ValueError(
                 "Duplicate Emails are not allowed in 'cc_recipients'"
@@ -73,8 +98,13 @@ class Mails(BaseModel):
     )
 
 
+# Enum for storing category of the team for the recruit
 @strawberry.enum
 class Team(StrEnum):
+    """
+    Enum for storing category of team for the recruit.
+    """
+
     Design = auto()
     Finance = auto()
     Logistics = auto()
@@ -82,6 +112,25 @@ class Team(StrEnum):
 
 
 class CCRecruitment(BaseModel):
+    """
+    Model for CC Recruitment form
+
+    Attributes:
+        id (PyObjectId): Unique ObjectId of the document.
+        uid (str): User id.
+        email (EmailStr): Email of the user.
+        teams (List[Team]): List of teams the user wants to apply for.
+        design_experience (str): Design experience of the user. Defaults to 
+                                 None.
+        why_this_position (str): Why the user wants this position.
+        why_cc (str): Why the user wants to join CC.
+        ideas (str): Ideas the user has for CC.
+        other_bodies (str): Other bodies the user is a part of. Defaults to 
+                            None.
+        good_fit (str): Why the user is a good fit for CC.
+        sent_time (datetime): Time when the form was submitted.
+    """
+
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     uid: str = Field(..., max_length=100)
     email: EmailStr = Field(...)
@@ -107,6 +156,19 @@ class CCRecruitment(BaseModel):
 
 
 class StorageFile(BaseModel):
+    """
+    Model for files being stored
+
+    Attributes:
+        id (PyObjectId): Unique ObjectId of the document.
+        title (str): Title of the file.
+        filename (str): Name of the file.
+        filetype (str): Type of the file.
+        latest_version (int): Latest version of the file.
+        modified_time (str): Time when the file was last modified.
+        creation_time (str): Time when the file was created.
+    """
+
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
     title: str = Field(
         ...,
