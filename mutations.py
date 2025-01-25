@@ -177,7 +177,7 @@ def createStorageFile(
     Enables CC to create of a new storagefile
 
     Args:
-        details (StorageFileInput): The details of the storagefile to be 
+        details (StorageFileInput): The details of the storagefile to be
                                     created.
         info (Info): contains the user's context information.
 
@@ -227,7 +227,7 @@ def updateStorageFile(id: str, version: int, info: Info) -> bool:
         info (Info): contains the user's context information.
 
     Returns:
-        bool: True if the storagefile is updated successfully, False 
+        bool: True if the storagefile is updated successfully, False
               otherwise.
 
     Raises:
@@ -269,7 +269,7 @@ def deleteStorageFile(id: str, info: Info) -> bool:
         info (Info): contains the user's context information.
 
     Returns:
-        bool: True if the storagefile is deleted successfully, False 
+        bool: True if the storagefile is deleted successfully, False
               otherwise.
 
     Raises:

@@ -31,7 +31,7 @@ def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
     Uploads file to the files service by any user.
 
     Args:
-        details (SignedURLInput): contains the details of the file to be 
+        details (SignedURLInput): contains the details of the file to be
                                   uploaded
         info (Info): contains the user's context information.
 

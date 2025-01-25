@@ -1,7 +1,7 @@
 """
 Main module for the CC Interfaces Microservice.
 
-This module sets up the FastAPI application and integrates the Strawberry 
+This module sets up the FastAPI application and integrates the Strawberry
 GraphQL schema.
 It includes the configuration for queries, mutations, and context.
 
