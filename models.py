@@ -120,11 +120,13 @@ class CCRecruitment(BaseModel):
         uid (str): User id.
         email (EmailStr): Email of the user.
         teams (List[Team]): List of teams the user wants to apply for.
-        design_experience (str): Design experience of the user. Defaults to None.
+        design_experience (str): Design experience of the user. Defaults to 
+                                 None.
         why_this_position (str): Why the user wants this position.
         why_cc (str): Why the user wants to join CC.
         ideas (str): Ideas the user has for CC.
-        other_bodies (str): Other bodies the user is a part of. Defaults to None.
+        other_bodies (str): Other bodies the user is a part of. Defaults to 
+                            None.
         good_fit (str): Why the user is a good fit for CC.
         sent_time (datetime): Time when the form was submitted.
     """

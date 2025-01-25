@@ -44,7 +44,7 @@ def sendMail(
     Args:
         info (Info): The context object containing the request information.
         mailInput (MailInput): The input data for sending an email.
-        inter_communication_secret (str | None, optional): The secret key for inter-communication. Defaults to None.
+        inter_communication_secret (str | None, optional): The secret key                                     for inter-communication. Defaults to None.
 
     Returns:
         bool: True if the email is sent successfully, False otherwise.
@@ -106,7 +106,8 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
     It send mails to the user and the CC admins regarding the application.
 
     Args:
-        ccRecruitmentInput (CCRecruitmentInput): The input data for applying for CC.
+        ccRecruitmentInput (CCRecruitmentInput): The input data for applying
+                                                 for CC.
         info (Info): contains the user's context information.
 
     Returns:
@@ -175,7 +176,8 @@ def createStorageFile(
     Enables CC to create of a new storagefile
 
     Args:
-        details (StorageFileInput): The details of the storagefile to be created.
+        details (StorageFileInput): The details of the storagefile to be 
+                                    created.
         info (Info): contains the user's context information.
 
     Returns:
@@ -224,7 +226,8 @@ def updateStorageFile(id: str, version: int, info: Info) -> bool:
         info (Info): contains the user's context information.
 
     Returns:
-        bool: True if the storagefile is updated successfully, False otherwise.
+        bool: True if the storagefile is updated successfully, False 
+              otherwise.
 
     Raises:
         ValueError: You do not have permission to access this resource.
@@ -265,7 +268,8 @@ def deleteStorageFile(id: str, info: Info) -> bool:
         info (Info): contains the user's context information.
 
     Returns:
-        bool: True if the storagefile is deleted successfully, False otherwise.
+        bool: True if the storagefile is deleted successfully, False 
+              otherwise.
 
     Raises:
         ValueError: You do not have permission to access this resource.

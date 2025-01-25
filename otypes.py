@@ -13,7 +13,8 @@ from models import CCRecruitment, Mails, PyObjectId, StorageFile
 # custom context class
 class Context(BaseContext):
     """
-    Class provides user metadata and cookies from request headers, has methods for doing this.
+    Class provides user metadata and cookies from request headers, has 
+    methods for doing this.
     """
 
     @cached_property
