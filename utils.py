@@ -9,7 +9,7 @@ ist = pytz.timezone("Asia/Kolkata")
 utc = pytz.timezone("UTC")
 
 
-def delete_file(filename):
+def delete_file(filename) -> str:
     """
     Makes a request to delete a file from the files service
 
