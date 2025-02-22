@@ -11,8 +11,8 @@ mailing and file upload.
 -   **Database Integration**: Uses MongoDB for storage.
 -   **File Management**: Can perform CRUD Operations on Storage Files
     and generate URLs when downloading
--   **Mailing Support:** We have interfaces for sending html emails to
-    the applicants to CC.
+-   **Mailing Support:** We have interfaces for sending html emails for
+    various purposes.
 
 ## Usage
 
@@ -42,3 +42,4 @@ source code for this can be found in the
 -   Contains mutations related to application submission
 -   Contains CRUD operations on the storagefiles.
 -   Contains mutations to send mail to CC applicants.
+-   Send Mail mutation which is used by other subgraphs like events, clubs etc too.
