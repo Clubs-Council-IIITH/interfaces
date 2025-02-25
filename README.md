@@ -2,8 +2,8 @@
 
 This microservice is built using **FastAPI**, **Strawberry (GraphQL)**,
 and **MongoDB**. It serves as a subgraph for managing **some useful
-interfaces**, providing queries and mutations to handle things like
-mailing and file upload.
+interfaces (specifically linking to external services)**, providing 
+queries and mutations to handle things like mailing and file upload.
 
 ## Features
 
@@ -11,12 +11,12 @@ mailing and file upload.
 -   **Database Integration**: Uses MongoDB for storage.
 -   **File Management**: Can perform CRUD Operations on Storage Files
     and generate URLs when downloading
--   **Mailing Support:** We have interfaces for sending html emails for
+-   **Mailing Support:** We have interfaces for sending HTML emails for
     various purposes.
 
 ## Usage
 
-This microservice is meant to be ran with the docker-compose script, the
+This microservice is meant to be run with the docker-compose script, the
 source code for this can be found in the
 [`services repo`](https://github.com/Clubs-Council-IIITH/services).
 
