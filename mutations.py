@@ -59,7 +59,7 @@ def sendMail(
     if not user:
         raise Exception("Not logged in!")
 
-    if user.get("role", None) not in ["cc", "club", "slo", "slc"]:
+    if user.get("role", None) not in ["cc", "club", "slo", "slc", "email_bot"]:
         raise Exception("Not Authenticated to access this API!!")
 
     if inter_communication_secret != inter_communication_secret_global:
