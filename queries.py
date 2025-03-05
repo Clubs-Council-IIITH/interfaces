@@ -36,7 +36,7 @@ def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
         info (Info): contains the user's context information.
 
     Returns:
-        SignedURL: A signed URL for uploading a file to the files service.
+        (SignedURL): A signed URL for uploading a file to the files service.
 
     Raises:
         Exception: Not logged in!
@@ -74,7 +74,7 @@ def ccApplications(info: Info) -> List[CCRecruitmentType]:
         info (Info): contains the user's context information.
 
     Returns:
-        List[CCRecruitmentType]: A list of all CC Applications.
+        (List[CCRecruitmentType]): A list of all CC Applications.
 
     Raises:
         Exception: Not logged in!
@@ -105,7 +105,7 @@ def haveAppliedForCC(info: Info) -> bool:
     Args:
         info (Info): contains the user's context information.
     Returns:
-        bool: True if the user has applied for CC, False otherwise.
+        (bool): True if the user has applied for CC, False otherwise.
 
     Raises:
         Exception: Not logged in!
@@ -137,7 +137,7 @@ def storagefiles(filetype: str) -> List[StorageFileType]:
         filetype (str): The type of file to get
 
     Returns:
-        List[StorageFileType]: A list of all storage files of the given type
+        (List[StorageFileType]): A list of all storage files of the given type
     """
     storage_files = docsstoragedb.find({"filetype": filetype})
     return [
@@ -155,7 +155,7 @@ def storagefile(file_id: str) -> StorageFileType:
         file_id (str): The id of the file to get
 
     Returns:
-        StorageFileType: The storage file with the given id
+        (StorageFileType): The storage file with the given id
     """
     storage_file = docsstoragedb.find_one({"_id": file_id})
     return StorageFileType.from_pydantic(

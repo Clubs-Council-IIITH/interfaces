@@ -17,7 +17,7 @@ def delete_file(filename) -> str:
         filename (str): The name of the file to delete
 
     Returns:
-        str: The response from the files service
+        (str): The response from the files service
 
     Raises:
         Exception: If the response is not successful
