@@ -43,7 +43,7 @@ def send_mail(
     to: list,
     cc: list = [],
     html_body: bool | None = False,
-):
+) -> bool:
     """
     Method to send email
 
@@ -57,7 +57,7 @@ def send_mail(
                                     Defaults to False.
 
     Returns:
-        bool: Whether the email was sent successfully or not.
+        (bool): Whether the email was sent successfully or not.
     """
 
     client = GraphClient(acquire_token)

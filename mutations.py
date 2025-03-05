@@ -48,7 +48,7 @@ def sendMail(
                                 for inter-communication. Defaults to None.
 
     Returns:
-        bool: True if the email is sent successfully, False otherwise.
+        (bool): True if the email is sent successfully, False otherwise.
 
     Raises:
         Exception: Not logged in!
@@ -112,7 +112,7 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
         info (Info): contains the user's context information.
 
     Returns:
-        bool: True if the application is successful, False otherwise.
+        (bool): True if the application is successful, False otherwise.
 
     Raises:
         Exception: Not logged in!
@@ -182,7 +182,7 @@ def createStorageFile(
         info (Info): contains the user's context information.
 
     Returns:
-        StorageFileType: The created storagefile.
+        (StorageFileType): The created storagefile.
 
     Raises:
         ValueError: You do not have permission to access this resource.
@@ -227,7 +227,7 @@ def updateStorageFile(id: str, version: int, info: Info) -> bool:
         info (Info): contains the user's context information.
 
     Returns:
-        bool: True if the storagefile is updated successfully, False
+        (bool): True if the storagefile is updated successfully, False
               otherwise.
 
     Raises:
@@ -269,7 +269,7 @@ def deleteStorageFile(id: str, info: Info) -> bool:
         info (Info): contains the user's context information.
 
     Returns:
-        bool: True if the storagefile is deleted successfully, False
+        (bool): True if the storagefile is deleted successfully, False
               otherwise.
 
     Raises:
