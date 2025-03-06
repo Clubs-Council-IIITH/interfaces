@@ -1,4 +1,4 @@
-"""R
+"""
 MongoDB Initialization Module.
 
 This module sets up the connection to the MongoDB database.
