@@ -66,19 +66,25 @@ def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
 
 
 @strawberry.field
-def ccApplications(info: Info) -> List[CCRecruitmentType]:
+def ccApplications(
+    info: Info,
+    year: int = 2024,
+) -> List[CCRecruitmentType]:
     """
     Returns list of all CC Applications for CC.
 
     Args:
         info (Info): contains the user's context information.
+        year (int, optional): The year of application. Defaults
 
     Returns:
-        (List[CCRecruitmentType]): A list of all CC Applications.
+        (List[CCRecruitmentType]): A list of all CC Applications for the given
+                                   year.
 
     Raises:
         Exception: Not logged in!
         Exception: Not Authenticated to access this API!!
+        Exception: Invalid year
     """
 
     user = info.context.user
@@ -88,28 +94,35 @@ def ccApplications(info: Info) -> List[CCRecruitmentType]:
     if user.get("role", None) not in ["cc"]:
         raise Exception("Not Authenticated to access this API!!")
 
+    if year < 2024:
+        raise Exception("Invalid year")
+
     results = ccdb.find()
     applications = [
         CCRecruitmentType.from_pydantic(CCRecruitment.model_validate(result))
         for result in results
+        if result.get("apply_year", 2024) == year
     ]
 
     return applications
 
 
 @strawberry.field
-def haveAppliedForCC(info: Info) -> bool:
+def haveAppliedForCC(info: Info, year: int = 2024) -> bool:
     """
     Finds whether any logged in user has applied for CC.
 
     Args:
         info (Info): contains the user's context information.
+        year (int, optional): The year of application. Defaults
+
     Returns:
         (bool): True if the user has applied for CC, False otherwise.
 
     Raises:
         Exception: Not logged in!
         Exception: Not Authenticated to access this API!!
+        Exception: Invalid year
     """
 
     user = info.context.user
@@ -119,10 +132,11 @@ def haveAppliedForCC(info: Info) -> bool:
     if user.get("role", None) not in ["public"]:
         raise Exception("Not Authenticated to access this API!!")
 
+    if year < 2024:
+        raise Exception("Invalid year")
+
     result = ccdb.find_one({"uid": user["uid"]})
-    if result:
-        return True
-    return False
+    return result and result.get("apply_year", 2024) == year
 
 
 # Storagefile queries

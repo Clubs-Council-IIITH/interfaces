@@ -129,6 +129,7 @@ class CCRecruitment(BaseModel):
                             None.
         good_fit (str): Why the user is a good fit for CC.
         sent_time (datetime): Time when the form was submitted.
+        apply_year (int): Year of application. Defaults to 2024.
     """
 
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
@@ -145,6 +146,7 @@ class CCRecruitment(BaseModel):
     good_fit: str = Field()
 
     sent_time: datetime = Field(default_factory=get_utc_time, frozen=True)
+    apply_year: int = 2024
 
     model_config = ConfigDict(
         populate_by_name=True,
