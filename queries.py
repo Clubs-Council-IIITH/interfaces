@@ -8,6 +8,7 @@ from typing import List
 
 import requests
 import strawberry
+from datetime import datetime
 
 from db import ccdb, docsstoragedb
 from models import CCRecruitment, StorageFile
@@ -89,6 +90,10 @@ def ccApplications(info: Info) -> List[CCRecruitmentType]:
         raise Exception("Not Authenticated to access this API!!")
 
     results = ccdb.find()
+    results = [
+        result for result in results 
+        if datetime.fromisoformat(result["sent_time"].replace("Z", "")) > datetime(2025, 1, 1)
+    ]
     applications = [
         CCRecruitmentType.from_pydantic(CCRecruitment.model_validate(result))
         for result in results
@@ -119,7 +124,10 @@ def haveAppliedForCC(info: Info) -> bool:
     if user.get("role", None) not in ["public"]:
         raise Exception("Not Authenticated to access this API!!")
 
-    result = ccdb.find_one({"uid": user["uid"]})
+    result = ccdb.find_one({
+        "uid": user["uid"],
+        "sent_time": {"$gt": datetime(2025, 1, 1).strftime("%Y-%m-%dT23:59:59+00:00")}
+    })
     if result:
         return True
     return False

@@ -6,6 +6,7 @@ import os
 import re
 
 import strawberry
+from datetime import datetime
 from fastapi.encoders import jsonable_encoder
 
 from db import ccdb, docsstoragedb
@@ -130,7 +131,8 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
     cc_recruitment_input = jsonable_encoder(ccRecruitmentInput.to_pydantic())
 
     # Check if the user has already applied
-    if ccdb.find_one({"email": cc_recruitment_input["email"]}):
+    if ccdb.find_one({"email": cc_recruitment_input["email"], 
+                "sent_time": {"$gt": datetime(2025, 1, 1).strftime("%Y-%m-%dT23:59:59+00:00")}}):
         raise Exception("You have already applied for CC!!")
 
     # add to database
@@ -157,7 +159,8 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
             why_this_position=created_sample.why_this_position,
             why_cc=created_sample.why_cc,
             good_fit=created_sample.good_fit,
-            ideas=created_sample.ideas,
+            ideas1=created_sample.ideas1,
+            ideas2=created_sample.ideas2,
             other_bodies=created_sample.other_bodies,
             design_experience=created_sample.design_experience or "N/A",
         ),
