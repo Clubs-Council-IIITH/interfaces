@@ -53,16 +53,18 @@ A new application has been received for CC. The details are as follows:
        to?
         $good_fit
 
-    7. Tell us more about your ideas and thoughts about the club activities 
-       on campus and how can the campus life (wrt. club activities) at IIIT 
-       Hyderabad can be improved.
-        $ideas
+    7. 7. Did you often want to take part in an event, but couldn't or didn't? 
+       What were the reasons? Why do you think that happened?
+        $ideas1
 
-    8. Have you been a part of any student-run bodies or clubs in our campus?
+    8. Tell us more about your ideas and thoughts to improve campus life (wrt. club activities) at IIIT Hyderabad.
+        $ideas2
+
+    9. Have you been a part of any student-run bodies or clubs in our campus?
        If yes, tell us about your experience.
         $other_bodies
 
-    9. Design Experience
+    10. Design Experience
         $design_experience
 
 Best regards,
