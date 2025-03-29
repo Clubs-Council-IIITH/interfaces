@@ -128,10 +128,15 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
         raise Exception("Not Authenticated to access this API!!")
 
     cc_recruitment_input = jsonable_encoder(ccRecruitmentInput.to_pydantic())
+    curr_year = int(get_curr_time_str()[:4])
 
     # Check if the user has already applied
-    if ccdb.find_one({"email": cc_recruitment_input["email"]}):
+    if ccdb.find_one(
+        {"email": cc_recruitment_input["email"], "apply_year": curr_year}
+    ):
         raise Exception("You have already applied for CC!!")
+
+    cc_recruitment_input["apply_year"] = curr_year
 
     # add to database
     created_id = ccdb.insert_one(cc_recruitment_input).inserted_id
@@ -157,6 +162,7 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
             why_this_position=created_sample.why_this_position,
             why_cc=created_sample.why_cc,
             good_fit=created_sample.good_fit,
+            ideas1=created_sample.ideas1,
             ideas=created_sample.ideas,
             other_bodies=created_sample.other_bodies,
             design_experience=created_sample.design_experience or "N/A",

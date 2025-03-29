@@ -109,6 +109,7 @@ class Team(StrEnum):
     Finance = auto()
     Logistics = auto()
     Stats = auto()
+    Corporate = auto()
 
 
 class CCRecruitment(BaseModel):
@@ -124,11 +125,13 @@ class CCRecruitment(BaseModel):
                                  None.
         why_this_position (str): Why the user wants this position.
         why_cc (str): Why the user wants to join CC.
+        ideas1 (str): reasons for not participating in a event.
         ideas (str): Ideas the user has for CC.
         other_bodies (str): Other bodies the user is a part of. Defaults to
                             None.
         good_fit (str): Why the user is a good fit for CC.
         sent_time (datetime): Time when the form was submitted.
+        apply_year (int): Year of application. Defaults to 2024.
     """
 
     id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
@@ -140,11 +143,13 @@ class CCRecruitment(BaseModel):
 
     why_this_position: str = Field()
     why_cc: str = Field()
-    ideas: str = Field()
+    ideas1: str = Field("")
+    ideas: str = Field(None)
     other_bodies: str | None = None
     good_fit: str = Field()
 
     sent_time: datetime = Field(default_factory=get_utc_time, frozen=True)
+    apply_year: int = 2024
 
     model_config = ConfigDict(
         populate_by_name=True,
