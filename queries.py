@@ -20,6 +20,7 @@ from otypes import (
     SignedURLInput,
     StorageFileType,
 )
+from utils import get_curr_time_str
 
 inter_communication_secret = os.getenv("INTER_COMMUNICATION_SECRET")
 
@@ -108,7 +109,7 @@ def ccApplications(
 
 
 @strawberry.field
-def haveAppliedForCC(info: Info, year: int = 2024) -> bool:
+def haveAppliedForCC(info: Info, year: int | None = None) -> bool:
     """
     Finds whether any logged in user has applied for CC.
 
@@ -131,6 +132,9 @@ def haveAppliedForCC(info: Info, year: int = 2024) -> bool:
 
     if user.get("role", None) not in ["public"]:
         raise Exception("Not Authenticated to access this API!!")
+
+    if year is None:
+        year = int(get_curr_time_str()[:4])
 
     if year < 2024:
         raise Exception("Invalid year")
