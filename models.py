@@ -125,8 +125,8 @@ class CCRecruitment(BaseModel):
                                  None.
         why_this_position (str): Why the user wants this position.
         why_cc (str): Why the user wants to join CC.
-        ideas1 (str): reasons for not participating in a event.
-        ideas2 (str): Ideas the user has for CC.
+        ideas (str): reasons for not participating in a event.
+        ideas1 (str): Ideas the user has for CC.
         other_bodies (str): Other bodies the user is a part of. Defaults to
                             None.
         good_fit (str): Why the user is a good fit for CC.
@@ -143,8 +143,8 @@ class CCRecruitment(BaseModel):
 
     why_this_position: str = Field()
     why_cc: str = Field()
-    ideas1: str = Field()
-    ideas2: str = Field()
+    ideas: str = Field(None)
+    ideas1: str = Field("")
     other_bodies: str | None = None
     good_fit: str = Field()
 
