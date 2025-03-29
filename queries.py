@@ -139,8 +139,12 @@ def haveAppliedForCC(info: Info, year: int | None = None) -> bool:
     if year < 2024:
         raise Exception("Invalid year")
 
-    result = ccdb.find_one({"uid": user["uid"]})
-    return result and result.get("apply_year", 2024) == year
+    # check if user already applied in the same year
+    results = ccdb.find({"uid": user["uid"]})
+    for result in results:
+        if result.get("apply_year", 2024) == year:
+            return True
+    return False
 
 
 # Storagefile queries

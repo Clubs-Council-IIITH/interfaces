@@ -53,12 +53,12 @@ A new application has been received for CC. The details are as follows:
        to?
         $good_fit
 
-    7. 7. Did you often want to take part in an event, but couldn't or didn't? 
+    7. Did you often want to take part in an event, but couldn't or didn't? 
        What were the reasons? Why do you think that happened?
-        $ideas
+        $ideas1
 
     8. Tell us more about your ideas and thoughts to improve campus life (wrt. club activities) at IIIT Hyderabad.
-        $ideas1
+        $ideas
 
     9. Have you been a part of any student-run bodies or clubs in our campus?
        If yes, tell us about your experience.

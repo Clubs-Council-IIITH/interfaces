@@ -76,8 +76,8 @@ class MailInput:
         "why_this_position",
         "why_cc",
         "good_fit",
-        "ideas",
         "ideas1",
+        "ideas",
         "other_bodies",
     ],
 )
