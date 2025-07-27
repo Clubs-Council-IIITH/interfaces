@@ -9,10 +9,8 @@ Attributes:
 """
 
 import os
-
+import httpx
 import msal
-from office365.graph_client import GraphClient
-from office365.outlook.mail.item_body import ItemBody
 
 TENANT_ID = os.environ.get("AD_TENANT_ID")
 CLIENT_ID = os.environ.get("AD_CLIENT_ID")
@@ -37,7 +35,7 @@ def acquire_token():
     return token
 
 
-def send_mail(
+async def send_mail(
     subject: str,
     body: str,
     to: list,
@@ -59,23 +57,24 @@ def send_mail(
     Returns:
         (bool): Whether the email was sent successfully or not.
     """
-
-    client = GraphClient(acquire_token)
-
-    if html_body:
-        body = ItemBody(content=body, content_type="HTML")
-
-    client.users[CLIENT_EMAIL].send_mail(
-        subject=subject,
-        body=body,
-        to_recipients=to,
-        cc_recipients=cc,
-        # save_to_sent_items= "false"
-    ).execute_query()
-
-    return True
-
-    # except Exception:
-    #     return False
-    #
-    # return True
+    token = acquire_token()["access_token"]
+    url = f"https://graph.microsoft.com/v1.0/users/{CLIENT_EMAIL}/sendMail"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+    }
+    message = {
+        "message": {
+            "subject": subject,
+            "body": {
+                "contentType": "HTML" if html_body else "Text",
+                "content": body,
+            },
+            "toRecipients": [{"emailAddress": {"address": recip}} for recip in to],
+            "ccRecipients": [{"emailAddress": {"address": recip}} for recip in cc] if cc else [],
+        },
+        "saveToSentItems": "true",
+    }
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, headers=headers, json=message)
+        return response.status_code == 202
