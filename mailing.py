@@ -9,6 +9,7 @@ Attributes:
 """
 
 import os
+
 import httpx
 import msal
 
@@ -57,12 +58,17 @@ async def send_mail(
     Returns:
         (bool): Whether the email was sent successfully or not.
     """
-    token = acquire_token()["access_token"]
+    token = acquire_token()
+    if token is None or "access_token" not in token:
+        raise ValueError("Failed to acquire access token")
+    token = token["access_token"]
+
     url = f"https://graph.microsoft.com/v1.0/users/{CLIENT_EMAIL}/sendMail"
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
     }
+
     message = {
         "message": {
             "subject": subject,
@@ -70,11 +76,18 @@ async def send_mail(
                 "contentType": "HTML" if html_body else "Text",
                 "content": body,
             },
-            "toRecipients": [{"emailAddress": {"address": recip}} for recip in to],
-            "ccRecipients": [{"emailAddress": {"address": recip}} for recip in cc] if cc else [],
+            "toRecipients": [
+                {"emailAddress": {"address": recip}} for recip in to
+            ],
+            "ccRecipients": [
+                {"emailAddress": {"address": recip}} for recip in cc
+            ]
+            if cc
+            else [],
         },
         "saveToSentItems": "true",
     }
+    
     async with httpx.AsyncClient() as client:
         response = await client.post(url, headers=headers, json=message)
         return response.status_code == 202
