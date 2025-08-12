@@ -77,6 +77,7 @@ async def sendMail(
         mail_input["body"],
         mail_input["to_recipients"],
         mail_input["cc_recipients"],
+        None,
         mail_input["html_body"],
     )
 
@@ -150,7 +151,6 @@ async def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
         APPLICANT_CONFIRMATION_SUBJECT.safe_substitute(),
         APPLICANT_CONFIRMATION_BODY.safe_substitute(),
         [created_sample.email],
-        [],
     )
     info.context.background_tasks.add_task(
         send_mail,
@@ -168,7 +168,6 @@ async def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
             design_experience=created_sample.design_experience or "N/A",
         ),
         ["clubs@iiit.ac.in"],
-        [],
     )
 
     return True
