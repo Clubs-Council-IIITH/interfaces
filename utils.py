@@ -2,14 +2,14 @@ import os
 from datetime import datetime
 
 import pytz
-import requests
+import httpx
 
 inter_communication_secret = os.getenv("INTER_COMMUNICATION_SECRET")
 ist = pytz.timezone("Asia/Kolkata")
 utc = pytz.timezone("UTC")
 
 
-def delete_file(filename) -> str:
+async def delete_file(filename) -> str:
     """
     Makes a request to delete a file from the files service
 
@@ -22,14 +22,15 @@ def delete_file(filename) -> str:
     Raises:
         Exception: If the response is not successful
     """
-    response = requests.post(
-        "http://files/delete-file",
-        params={
-            "filename": filename,
-            "inter_communication_secret": inter_communication_secret,
-            "static_file": "true",
-        },
-    )
+    async with httpx.AsyncClient() as client:
+        response = await client.post(
+            "http://files/delete-file",
+            params={
+                "filename": filename,
+                "inter_communication_secret": inter_communication_secret,
+                "static_file": "true",
+            },
+        )
 
     if response.status_code != 200:
         raise Exception(response.text)

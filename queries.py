@@ -6,7 +6,7 @@ import json
 import os
 from typing import List
 
-import requests
+import httpx
 import strawberry
 
 from db import ccdb, docsstoragedb
@@ -27,7 +27,7 @@ inter_communication_secret = os.getenv("INTER_COMMUNICATION_SECRET")
 
 # fetch signed url from the files service
 @strawberry.field
-def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
+async def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
     """
     Uploads file to the files service by any user.
 
@@ -47,17 +47,18 @@ def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
     if not user:
         raise Exception("Not logged in!")
 
-    # make request to files api
-    response = requests.get(
-        "http://files/signed-url",
-        params={
-            "user": json.dumps(user),
-            "static_file": "true" if details.static_file else "false",
-            "filename": details.filename,
-            "inter_communication_secret": inter_communication_secret,
-            "max_sizeMB": details.max_size_mb,
-        },
-    )
+    async with httpx.AsyncClient() as client:
+        # make request to files api
+        response = await client.get(
+            "http://files/signed-url",
+            params={
+                "user": json.dumps(user),
+                "static_file": "true" if details.static_file else "false",
+                "filename": details.filename,
+                "inter_communication_secret": inter_communication_secret,
+                "max_sizeMB": details.max_size_mb,
+            },
+        )
 
     # error handling
     if response.status_code != 200:
@@ -67,7 +68,7 @@ def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
 
 
 @strawberry.field
-def ccApplications(
+async def ccApplications(
     info: Info,
     year: int = 2024,
 ) -> List[CCRecruitmentType]:
@@ -98,7 +99,7 @@ def ccApplications(
     if year < 2024:
         raise Exception("Invalid year")
 
-    results = ccdb.find()
+    results = await ccdb.find().to_list(length=None)
     applications = [
         CCRecruitmentType.from_pydantic(CCRecruitment.model_validate(result))
         for result in results
@@ -109,7 +110,7 @@ def ccApplications(
 
 
 @strawberry.field
-def haveAppliedForCC(info: Info, year: int | None = None) -> bool:
+async def haveAppliedForCC(info: Info, year: int | None = None) -> bool:
     """
     Finds whether any logged in user has applied for CC.
 
@@ -138,9 +139,9 @@ def haveAppliedForCC(info: Info, year: int | None = None) -> bool:
 
     if year < 2024:
         raise Exception("Invalid year")
-
+    
     # check if user already applied in the same year
-    results = ccdb.find({"uid": user["uid"]})
+    results = await ccdb.find({"uid": user["uid"]}).to_list(length=None)
     for result in results:
         if result.get("apply_year", 2024) == year:
             return True
@@ -151,7 +152,7 @@ def haveAppliedForCC(info: Info, year: int | None = None) -> bool:
 
 
 @strawberry.field
-def storagefiles(filetype: str) -> List[StorageFileType]:
+async def storagefiles(filetype: str) -> List[StorageFileType]:
     """
     Gets all the storage files, has public access
 
@@ -161,7 +162,7 @@ def storagefiles(filetype: str) -> List[StorageFileType]:
     Returns:
         (List[StorageFileType]): A list of all storage files of the given type
     """
-    storage_files = docsstoragedb.find({"filetype": filetype})
+    storage_files = await docsstoragedb.find({"filetype": filetype}).to_list(length=None)
     return [
         StorageFileType.from_pydantic(StorageFile.model_validate(storage_file))
         for storage_file in storage_files
@@ -169,7 +170,7 @@ def storagefiles(filetype: str) -> List[StorageFileType]:
 
 
 @strawberry.field
-def storagefile(file_id: str) -> StorageFileType:
+async def storagefile(file_id: str) -> StorageFileType:
     """
     Gets a single storage file by id, has public access
 
@@ -179,7 +180,7 @@ def storagefile(file_id: str) -> StorageFileType:
     Returns:
         (StorageFileType): The storage file with the given id
     """
-    storage_file = docsstoragedb.find_one({"_id": file_id})
+    storage_file = await docsstoragedb.find_one({"_id": file_id})
     return StorageFileType.from_pydantic(
         StorageFile.model_validate(storage_file)
     )

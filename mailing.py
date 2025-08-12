@@ -10,9 +10,8 @@ Attributes:
 
 import os
 
+import httpx
 import msal
-from office365.graph_client import GraphClient
-from office365.outlook.mail.item_body import ItemBody
 
 TENANT_ID = os.environ.get("AD_TENANT_ID")
 CLIENT_ID = os.environ.get("AD_CLIENT_ID")
@@ -37,11 +36,12 @@ def acquire_token():
     return token
 
 
-def send_mail(
+async def send_mail(
     subject: str,
     body: str,
     to: list,
     cc: list = [],
+    reply_to: str | None = None,
     html_body: bool | None = False,
 ) -> bool:
     """
@@ -59,23 +59,39 @@ def send_mail(
     Returns:
         (bool): Whether the email was sent successfully or not.
     """
+    token = acquire_token()
+    if token is None or "access_token" not in token:
+        raise ValueError("Failed to acquire access token")
+    token = token["access_token"]
 
-    client = GraphClient(acquire_token)
+    url = f"https://graph.microsoft.com/v1.0/users/{CLIENT_EMAIL}/sendMail"
+    headers = {
+        "Authorization": f"Bearer {token}",
+        "Content-Type": "application/json",
+    }
 
-    if html_body:
-        body = ItemBody(content=body, content_type="HTML")
+    message = {
+        "message": {
+            "subject": subject,
+            "body": {
+                "contentType": "HTML" if html_body else "Text",
+                "content": body,
+            },
+            "toRecipients": [
+                {"emailAddress": {"address": recip}} for recip in to
+            ],
+            "ccRecipients": [
+                {"emailAddress": {"address": recip}} for recip in cc
+            ],
+        },
+        "saveToSentItems": "false",
+    }
 
-    client.users[CLIENT_EMAIL].send_mail(
-        subject=subject,
-        body=body,
-        to_recipients=to,
-        cc_recipients=cc,
-        # save_to_sent_items= "false"
-    ).execute_query()
+    if reply_to is not None:
+        message["message"]["replyTo"] = [
+            {"emailAddress": {"address": reply_to}}
+        ]
 
-    return True
-
-    # except Exception:
-    #     return False
-    #
-    # return True
+    async with httpx.AsyncClient() as client:
+        response = await client.post(url, headers=headers, json=message)
+        return response.status_code == 202
