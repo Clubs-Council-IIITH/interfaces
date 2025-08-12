@@ -41,6 +41,7 @@ async def send_mail(
     body: str,
     to: list,
     cc: list = [],
+    reply_to: str | None = None,
     html_body: bool | None = False,
 ) -> bool:
     """
@@ -81,13 +82,16 @@ async def send_mail(
             ],
             "ccRecipients": [
                 {"emailAddress": {"address": recip}} for recip in cc
-            ]
-            if cc
-            else [],
+            ],
         },
         "saveToSentItems": "false",
     }
-    
+
+    if reply_to is not None:
+        message["message"]["replyTo"] = [
+            {"emailAddress": {"address": reply_to}}
+        ]
+
     async with httpx.AsyncClient() as client:
         response = await client.post(url, headers=headers, json=message)
         return response.status_code == 202
