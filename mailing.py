@@ -85,7 +85,7 @@ async def send_mail(
             if cc
             else [],
         },
-        "saveToSentItems": "true",
+        "saveToSentItems": "false",
     }
     
     async with httpx.AsyncClient() as client:
