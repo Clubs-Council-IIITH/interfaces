@@ -211,9 +211,9 @@ async def createStorageFile(
     ):
         raise ValueError("A storagefile already exists with this name.")
 
-    created_id = (await docsstoragedb.insert_one(
-        jsonable_encoder(storagefile)
-    )).inserted_id
+    created_id = (
+        await docsstoragedb.insert_one(jsonable_encoder(storagefile))
+    ).inserted_id
     created_storagefile = await docsstoragedb.find_one({"_id": created_id})
 
     return StorageFileType.from_pydantic(

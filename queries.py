@@ -139,7 +139,7 @@ async def haveAppliedForCC(info: Info, year: int | None = None) -> bool:
 
     if year < 2024:
         raise Exception("Invalid year")
-    
+
     # check if user already applied in the same year
     results = await ccdb.find({"uid": user["uid"]}).to_list(length=None)
     for result in results:
@@ -162,7 +162,9 @@ async def storagefiles(filetype: str) -> List[StorageFileType]:
     Returns:
         (List[StorageFileType]): A list of all storage files of the given type
     """
-    storage_files = await docsstoragedb.find({"filetype": filetype}).to_list(length=None)
+    storage_files = await docsstoragedb.find({"filetype": filetype}).to_list(
+        length=None
+    )
     return [
         StorageFileType.from_pydantic(StorageFile.model_validate(storage_file))
         for storage_file in storage_files
