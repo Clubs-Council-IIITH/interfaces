@@ -33,7 +33,7 @@ inter_communication_secret_global = os.getenv("INTER_COMMUNICATION_SECRET")
 
 # sample mutation
 @strawberry.mutation
-def sendMail(
+async def sendMail(
     info: Info,
     mailInput: MailInput,
     inter_communication_secret: str | None = None,
@@ -77,6 +77,7 @@ def sendMail(
         mail_input["body"],
         mail_input["to_recipients"],
         mail_input["cc_recipients"],
+        None,
         mail_input["html_body"],
     )
 
@@ -99,7 +100,7 @@ def sendMail(
 
 
 @strawberry.mutation
-def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
+async def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
     """
     This method is used to apply for CC
 
@@ -131,7 +132,7 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
     curr_year = int(get_curr_time_str()[:4])
 
     # Check if the user has already applied
-    if ccdb.find_one(
+    if await ccdb.find_one(
         {"email": cc_recruitment_input["email"], "apply_year": curr_year}
     ):
         raise Exception("You have already applied for CC!!")
@@ -139,9 +140,9 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
     cc_recruitment_input["apply_year"] = curr_year
 
     # add to database
-    created_id = ccdb.insert_one(cc_recruitment_input).inserted_id
+    created_id = (await ccdb.insert_one(cc_recruitment_input)).inserted_id
     created_sample = CCRecruitment.model_validate(
-        ccdb.find_one({"_id": created_id})
+        await ccdb.find_one({"_id": created_id})
     )
 
     # Send emails
@@ -150,7 +151,6 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
         APPLICANT_CONFIRMATION_SUBJECT.safe_substitute(),
         APPLICANT_CONFIRMATION_BODY.safe_substitute(),
         [created_sample.email],
-        [],
     )
     info.context.background_tasks.add_task(
         send_mail,
@@ -168,7 +168,6 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
             design_experience=created_sample.design_experience or "N/A",
         ),
         ["clubs@iiit.ac.in"],
-        [],
     )
 
     return True
@@ -176,7 +175,7 @@ def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
 
 # StorageFile related mutations
 @strawberry.mutation
-def createStorageFile(
+async def createStorageFile(
     details: StorageFileInput, info: Info
 ) -> StorageFileType:
     """
@@ -207,15 +206,15 @@ def createStorageFile(
     )
 
     # Check if any storagefile with same title already exists
-    if docsstoragedb.find_one(
+    if await docsstoragedb.find_one(
         {"title": {"$regex": f"^{re.escape(details.title)}$", "$options": "i"}}
     ):
         raise ValueError("A storagefile already exists with this name.")
 
-    created_id = docsstoragedb.insert_one(
+    created_id = (await docsstoragedb.insert_one(
         jsonable_encoder(storagefile)
-    ).inserted_id
-    created_storagefile = docsstoragedb.find_one({"_id": created_id})
+    )).inserted_id
+    created_storagefile = await docsstoragedb.find_one({"_id": created_id})
 
     return StorageFileType.from_pydantic(
         StorageFile.model_validate(created_storagefile)
@@ -223,7 +222,7 @@ def createStorageFile(
 
 
 @strawberry.mutation
-def updateStorageFile(id: str, version: int, info: Info) -> bool:
+async def updateStorageFile(id: str, version: int, info: Info) -> bool:
     """
     Enables CC to update an existing storagefile
 
@@ -245,7 +244,7 @@ def updateStorageFile(id: str, version: int, info: Info) -> bool:
     if user is None or user.get("role") != "cc":
         raise ValueError("You do not have permission to access this resource.")
 
-    storagefile = docsstoragedb.find_one({"_id": id})
+    storagefile = await docsstoragedb.find_one({"_id": id})
     if storagefile is None:
         raise ValueError("StorageFile not found.")
 
@@ -259,14 +258,14 @@ def updateStorageFile(id: str, version: int, info: Info) -> bool:
         latest_version=version,
     )
 
-    docsstoragedb.find_one_and_update(
+    await docsstoragedb.find_one_and_update(
         {"_id": id}, {"$set": jsonable_encoder(updated_storagefile)}
     )
     return True
 
 
 @strawberry.mutation
-def deleteStorageFile(id: str, info: Info) -> bool:
+async def deleteStorageFile(id: str, info: Info) -> bool:
     """
     Enables CC to delete an existing storagefile
 
@@ -287,14 +286,14 @@ def deleteStorageFile(id: str, info: Info) -> bool:
     if user is None or user.get("role") != "cc":
         raise ValueError("You do not have permission to access this resource.")
 
-    storagefile = docsstoragedb.find_one({"_id": id})
+    storagefile = await docsstoragedb.find_one({"_id": id})
     if storagefile is None:
         raise ValueError("StorageFile not found.")
 
     # delete the file from storage
     # delete_file(storagefile["filename"])
 
-    docsstoragedb.delete_one({"_id": id})
+    await docsstoragedb.delete_one({"_id": id})
     return True
 
 
