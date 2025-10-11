@@ -58,6 +58,13 @@ class MailReturnType:
 class MailInput:
     """
     Input used for taking subject, body and to recipients of a mail.
+
+    Attributes:
+    cc_recipients (Optional[List[str]]): List of CC recipients.
+                                     Defaults to None.
+    uid (Optional[str]): UID of the sender. Defaults to None.
+    html_body (Optional[bool]): Whether the body is in HTML format.
+                             Defaults to False
     """
 
     cc_recipients: Optional[List[str]] = strawberry.UNSET
@@ -103,6 +110,9 @@ class CCRecruitmentType:
 class SignedURL:
     """
     Type used for returning the signed url of a file.
+
+    Attributes:
+        url (str): The signed URL.
     """
 
     url: str
@@ -112,6 +122,12 @@ class SignedURL:
 class SignedURLInput:
     """
     Input used for taking details regarding size, name and format of a file.
+
+    Attributes:
+        static_file (bool): Whether the file is static or not.
+                         Defaults to False.
+        filename (str): Name of the file. Defaults to None.
+        max_size_mb (float): Size of the file in MB. Defaults to 0.3.
     """
 
     static_file: bool = False

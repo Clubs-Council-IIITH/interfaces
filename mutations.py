@@ -42,9 +42,9 @@ async def sendMail(
     Resolver that initiates the sending of an email.
 
     Args:
-        info (Info): The context object containing the request information.
-        mailInput (MailInput): The input data for sending an email.
-        inter_communication_secret (str | None, optional): The secret key
+        info (otypes.Info): contains the user's context information.
+        mailInput (otypes.MailInput): The input data for sending an email.
+        inter_communication_secret (str): The secret key
                                 for inter-communication. Defaults to None.
 
     Returns:
@@ -108,9 +108,9 @@ async def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
     It send mails to the user and the CC admins regarding the application.
 
     Args:
-        ccRecruitmentInput (CCRecruitmentInput): The input data for applying
-                                                 for CC.
-        info (Info): contains the user's context information.
+        ccRecruitmentInput (otypes.CCRecruitmentInput): The input data while
+                                                 applying for CC.
+        info (otypes.Info): contains the user's context information.
 
     Returns:
         (bool): True if the application is successful, False otherwise.
@@ -182,12 +182,12 @@ async def createStorageFile(
     Enables CC to create of a new storagefile
 
     Args:
-        details (StorageFileInput): The details of the storagefile to be
+        details (otypes.StorageFileInput): The details of the storagefile to be
                                     created.
-        info (Info): contains the user's context information.
+        info (otypes.Info): contains the user's context information.
 
     Returns:
-        (StorageFileType): The created storagefile.
+        (otypes.StorageFileType): The created storagefile.
 
     Raises:
         ValueError: You do not have permission to access this resource.
@@ -229,7 +229,7 @@ async def updateStorageFile(id: str, version: int, info: Info) -> bool:
     Args:
         id (str): The id of the storagefile to be updated.
         version (int): The new version of the storagefile.
-        info (Info): contains the user's context information.
+        info (otypes.Info): contains the user's context information.
 
     Returns:
         (bool): True if the storagefile is updated successfully, False
@@ -271,7 +271,7 @@ async def deleteStorageFile(id: str, info: Info) -> bool:
 
     Args:
         id (str): The id of the storagefile to be deleted.
-        info (Info): contains the user's context information.
+        info (otypes.Info): contains the user's context information.
 
     Returns:
         (bool): True if the storagefile is deleted successfully, False
