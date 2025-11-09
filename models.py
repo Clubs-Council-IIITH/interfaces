@@ -129,7 +129,7 @@ class CCRecruitment(BaseModel):
         ideas (str): Ideas the user has for CC.
         other_bodies (str): Other bodies the user is a part of. Defaults to
                             None.
-        good_fit (str): Why the user is a good fit for CC.
+        good_fit (str | None): Why the user is a good fit for CC.
         sent_time (datetime): Time when the form was submitted.
         apply_year (int): Year of application. Defaults to 2024.
     """

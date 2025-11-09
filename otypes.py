@@ -60,11 +60,11 @@ class MailInput:
     Input used for taking subject, body and to recipients of a mail.
 
     Attributes:
-    cc_recipients (Optional[List[str]]): List of CC recipients.
-                                     Defaults to None.
-    uid (Optional[str]): UID of the sender. Defaults to None.
-    html_body (Optional[bool]): Whether the body is in HTML format.
-                             Defaults to False
+        cc_recipients (Optional[List[str]]): List of CC recipients.
+                                        Defaults to None.
+        uid (Optional[str]): UID of the sender. Defaults to None.
+        html_body (Optional[bool]): Whether the body is in HTML format.
+                                Defaults to False
     """
 
     cc_recipients: Optional[List[str]] = strawberry.UNSET
@@ -91,6 +91,20 @@ class MailInput:
 class CCRecruitmentInput:
     """
     Input used for taking in answers of the recruitment form.
+
+    Attributes:
+        uid (str): User ID of the applicant.
+        email (str): Email of the applicant.
+        teams (List[models.Team]): List of teams the applicant is applying for.
+        design_experience (str): Design experience of the applicant. Defaults 
+                                to None.
+        why_this_position (str): Why the applicant wants this position.
+        why_cc (str): Why the applicant wants to join CC.
+        ideas1 (str): Reasons for not participating in an event.
+        ideas (str): Ideas the applicant has for CC.
+        other_bodies (str | None): Other bodies the applicant is a part of. 
+                                Defaults to None.
+        good_fit (str): Why the applicant is a good fit for CC.
     """
 
     pass
@@ -99,7 +113,10 @@ class CCRecruitmentInput:
 @strawberry.experimental.pydantic.type(model=CCRecruitment, all_fields=True)
 class CCRecruitmentType:
     """
-    Type used for returning the answers of the recruitment form.
+    Type used for returning the answers of the recruitment form. 
+
+    Attributes:
+        fields (models.CCRecruitment): All fields of the CCRecruitment model.
     """
 
     pass
@@ -142,6 +159,11 @@ class SignedURLInput:
 class StorageFileInput:
     """
     Input used for taking details regarding the file's title, name and type.
+
+    Attributes:
+        title (str): Title of the file.
+        filename (str): Name of the file.
+        filetype (str): Type of the file.
     """
 
     pass
@@ -151,6 +173,9 @@ class StorageFileInput:
 class StorageFileType:
     """
     Input used for taking all the details regarding the file.
+
+    Attributes:
+        fields (models.StorageFile): All fields of the StorageFile model.
     """
 
     pass
