@@ -47,8 +47,10 @@ class Mails(BaseModel):
         uid (str): User id. Defaults to None.
         subject (str): Subject of the mail.
         body (str): Body of the mail.
-        to_recipients (List[EmailStr]): List of 'to' recipients.
-        cc_recipients (List[EmailStr]): List of 'cc' recipients.
+        to_recipients (List[pydantic.networks.EmailStr]): List
+                                                         of 'to' recipients.
+        cc_recipients (List[pydantic.networks.EmailStr]): List
+                                                         of 'cc' recipients.
         html_body (bool): Whether the body is in HTML or not.
         sent_time (datetime): Time when the mail was sent.
     """
@@ -119,7 +121,7 @@ class CCRecruitment(BaseModel):
     Attributes:
         id (PyObjectId): Unique ObjectId of the document.
         uid (str): User id.
-        email (EmailStr): Email of the user.
+        email (pydantic.networks.EmailStr): Email of the user.
         teams (List[Team]): List of teams the user wants to apply for.
         design_experience (str): Design experience of the user. Defaults to
                                  None.
