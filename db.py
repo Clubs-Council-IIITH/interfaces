@@ -11,10 +11,12 @@ Attributes:
     MONGO_PORT (str): MongoDB port. Defaults to "27017".
     MONGO_URI (str): MongoDB URI.
     MONGO_DATABASE (str): MongoDB database name.
-    client (MongoClient): MongoDB client.
-    db (Database): MongoDB database.
-    ccdb (Collection): MongoDB collection for Clubs Council.
-    docsstoragedb (Collection): MongoDB collection for storing documents.
+    client (pymongo.AsyncMongoClient): MongoDB client.
+    db (pymongo.asynchronous.database.AsyncDatabase): MongoDB database.
+    ccdb (pymongo.asynchronous.collection.AsyncCollection): MongoDB Clubs 
+                                                        Council collection.
+    docsstoragedb (pymongo.asynchronous.collection.AsyncCollection): MongoDB
+                                                         documents collection.
 """
 
 from os import getenv

@@ -5,8 +5,12 @@ import httpx
 import pytz
 
 inter_communication_secret = os.getenv("INTER_COMMUNICATION_SECRET")
+
 ist = pytz.timezone("Asia/Kolkata")
+"""IST timezone"""
+
 utc = pytz.timezone("UTC")
+"""UTC timezone"""
 
 
 async def delete_file(filename) -> str:
@@ -38,15 +42,21 @@ async def delete_file(filename) -> str:
     return response.text
 
 
-def get_utc_time():
+def get_utc_time() -> datetime:
     """
-    Returns current time according to UTC timezone
+    Current time according to UTC timezone.
+
+    Returns:
+        datetime: Current UTC time
     """
     return datetime.now(utc)
 
 
-def get_curr_time_str():
+def get_curr_time_str() -> str:
     """
-    Returns current IST time in YYYY-MM-DD HH:MM:SS format
+    Current IST time in YYYY-MM-DD HH:MM:SS format.
+
+    Returns:
+        str: Current IST time as a formatted string
     """
     return datetime.now(ist).strftime("%Y-%m-%d %H:%M:%S")

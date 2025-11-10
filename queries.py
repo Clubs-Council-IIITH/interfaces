@@ -32,12 +32,12 @@ async def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
     Uploads file to the files service by any user.
 
     Args:
-        details (SignedURLInput): contains the details of the file to be
+        details (otypes.SignedURLInput): contains the details of the file to be
                                   uploaded
-        info (Info): contains the user's context information.
+        info (otypes.Info): contains the user's context information.
 
     Returns:
-        (SignedURL): A signed URL for uploading a file to the files service.
+        (otypes.SignedURL): Signed URL for uploading files to the files service
 
     Raises:
         Exception: Not logged in!
@@ -76,12 +76,12 @@ async def ccApplications(
     Returns list of all CC Applications for CC.
 
     Args:
-        info (Info): contains the user's context information.
-        year (int, optional): The year of application. Defaults
+        info (otypes.Info): contains the user's context information.
+        year (int): The year of application. Defaults to 2024.
 
     Returns:
-        (List[CCRecruitmentType]): A list of all CC Applications for the given
-                                   year.
+        (List[otypes.CCRecruitmentType]): List of all CC Applications
+                                     for the given year.
 
     Raises:
         Exception: Not logged in!
@@ -115,8 +115,8 @@ async def haveAppliedForCC(info: Info, year: int | None = None) -> bool:
     Finds whether any logged in user has applied for CC.
 
     Args:
-        info (Info): contains the user's context information.
-        year (int, optional): The year of application. Defaults
+        info (otypes.Info): contains the user's context information.
+        year (int): The year of application. Defaults to None.
 
     Returns:
         (bool): True if the user has applied for CC, False otherwise.
@@ -157,10 +157,10 @@ async def storagefiles(filetype: str) -> List[StorageFileType]:
     Gets all the storage files, has public access
 
     Args:
-        filetype (str): The type of file to get
+        filetype (str): The type of file to get.
 
     Returns:
-        (List[StorageFileType]): A list of all storage files of the given type
+        (List[otypes.StorageFileType]): List of storage files of the given type
     """
     storage_files = await docsstoragedb.find({"filetype": filetype}).to_list(
         length=None
@@ -180,7 +180,7 @@ async def storagefile(file_id: str) -> StorageFileType:
         file_id (str): The id of the file to get
 
     Returns:
-        (StorageFileType): The storage file with the given id
+        (otypes.StorageFileType): The storage file with the given id
     """
     storage_file = await docsstoragedb.find_one({"_id": file_id})
     return StorageFileType.from_pydantic(
