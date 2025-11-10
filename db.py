@@ -13,7 +13,7 @@ Attributes:
     MONGO_DATABASE (str): MongoDB database name.
     client (pymongo.AsyncMongoClient): MongoDB client.
     db (pymongo.asynchronous.database.AsyncDatabase): MongoDB database.
-    ccdb (pymongo.asynchronous.collection.AsyncCollection): MongoDB Clubs 
+    ccdb (pymongo.asynchronous.collection.AsyncCollection): MongoDB Clubs
                                                         Council collection.
     docsstoragedb (pymongo.asynchronous.collection.AsyncCollection): MongoDB
                                                          documents collection.

@@ -96,13 +96,13 @@ class CCRecruitmentInput:
         uid (str): User ID of the applicant.
         email (str): Email of the applicant.
         teams (List[models.Team]): List of teams the applicant is applying for.
-        design_experience (str): Design experience of the applicant. Defaults 
+        design_experience (str): Design experience of the applicant. Defaults
                                 to None.
         why_this_position (str): Why the applicant wants this position.
         why_cc (str): Why the applicant wants to join CC.
         ideas1 (str): Reasons for not participating in an event.
         ideas (str): Ideas the applicant has for CC.
-        other_bodies (str | None): Other bodies the applicant is a part of. 
+        other_bodies (str | None): Other bodies the applicant is a part of.
                                 Defaults to None.
         good_fit (str): Why the applicant is a good fit for CC.
     """
@@ -113,7 +113,7 @@ class CCRecruitmentInput:
 @strawberry.experimental.pydantic.type(model=CCRecruitment, all_fields=True)
 class CCRecruitmentType:
     """
-    Type used for returning the answers of the recruitment form. 
+    Type used for returning the answers of the recruitment form.
 
     Attributes:
         fields (models.CCRecruitment): All fields of the CCRecruitment model.
