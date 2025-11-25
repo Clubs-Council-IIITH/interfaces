@@ -1,15 +1,15 @@
 import os
 from datetime import datetime
+from zoneinfo import ZoneInfo
 
 import httpx
-import pytz
 
 inter_communication_secret = os.getenv("INTER_COMMUNICATION_SECRET")
 
-ist = pytz.timezone("Asia/Kolkata")
+ist = ZoneInfo("Asia/Kolkata")
 """IST timezone"""
 
-utc = pytz.timezone("UTC")
+utc = ZoneInfo("UTC")
 """UTC timezone"""
 
 
