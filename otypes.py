@@ -43,18 +43,16 @@ PyObjectIdType = strawberry.scalar(
 """A scalar Type for serializing PyObjectId, used for id field"""
 
 
-@strawberry.experimental.pydantic.type(model=Mails, fields=["subject", "uid"])
+@strawberry.experimental.pydantic.type(model=Mails)
 class MailReturnType:
     """
     Type used for returning the subject and uid of a mail.
     """
+    uid: strawberry.auto
+    subject: strawberry.auto
 
-    pass
 
-
-@strawberry.experimental.pydantic.input(
-    model=Mails, fields=["subject", "body", "to_recipients"]
-)
+@strawberry.experimental.pydantic.input(model=Mails)
 class MailInput:
     """
     Input used for taking subject, body and to recipients of a mail.
@@ -66,28 +64,15 @@ class MailInput:
         html_body (Optional[bool]): Whether the body is in HTML format.
                                 Defaults to False
     """
-
+    subject: strawberry.auto
+    body: strawberry.auto
+    to_recipients: strawberry.auto
     cc_recipients: Optional[List[str]] = strawberry.UNSET
     uid: Optional[str] = strawberry.UNSET
     html_body: Optional[bool] = False
 
 
-@strawberry.experimental.pydantic.input(
-    model=CCRecruitment,
-    # all_fields=True,
-    fields=[
-        "uid",
-        "email",
-        "teams",
-        "design_experience",
-        "why_this_position",
-        "why_cc",
-        "good_fit",
-        "ideas1",
-        "ideas",
-        "other_bodies",
-    ],
-)
+@strawberry.experimental.pydantic.input(model=CCRecruitment)
 class CCRecruitmentInput:
     """
     Input used for taking in answers of the recruitment form.
@@ -106,11 +91,19 @@ class CCRecruitmentInput:
                                 Defaults to None.
         good_fit (str): Why the applicant is a good fit for CC.
     """
+    uid: strawberry.auto
+    email: strawberry.auto
+    teams: strawberry.auto
+    design_experience: strawberry.auto
+    why_this_position: strawberry.auto
+    why_cc: strawberry.auto
+    ideas1: strawberry.auto
+    ideas: strawberry.auto
+    other_bodies: strawberry.auto
+    good_fit: strawberry.auto
 
-    pass
 
-
-@strawberry.experimental.pydantic.type(model=CCRecruitment, all_fields=True)
+@strawberry.experimental.pydantic.type(model=CCRecruitment)
 class CCRecruitmentType:
     """
     Type used for returning the answers of the recruitment form.
@@ -118,8 +111,19 @@ class CCRecruitmentType:
     Attributes:
         fields (models.CCRecruitment): All fields of the CCRecruitment model.
     """
-
-    pass
+    id: strawberry.auto
+    uid: strawberry.auto
+    email: strawberry.auto
+    teams: strawberry.auto
+    design_experience: strawberry.auto
+    why_this_position: strawberry.auto
+    why_cc: strawberry.auto
+    ideas1: strawberry.auto
+    ideas: strawberry.auto
+    other_bodies: strawberry.auto
+    good_fit: strawberry.auto
+    sent_time: strawberry.auto
+    apply_year: strawberry.auto
 
 
 # signed url object type
@@ -153,9 +157,7 @@ class SignedURLInput:
 
 
 # StorageFile Types
-@strawberry.experimental.pydantic.input(
-    model=StorageFile, fields=["title", "filename", "filetype"]
-)
+@strawberry.experimental.pydantic.input(model=StorageFile)
 class StorageFileInput:
     """
     Input used for taking details regarding the file's title, name and type.
@@ -165,11 +167,12 @@ class StorageFileInput:
         filename (str): Name of the file.
         filetype (str): Type of the file.
     """
+    title: strawberry.auto
+    filename: strawberry.auto
+    filetype: strawberry.auto
 
-    pass
 
-
-@strawberry.experimental.pydantic.type(model=StorageFile, all_fields=True)
+@strawberry.experimental.pydantic.type(model=StorageFile)
 class StorageFileType:
     """
     Input used for taking all the details regarding the file.
@@ -177,5 +180,10 @@ class StorageFileType:
     Attributes:
         fields (models.StorageFile): All fields of the StorageFile model.
     """
-
-    pass
+    id: strawberry.auto
+    title: strawberry.auto
+    filename: strawberry.auto
+    filetype: strawberry.auto
+    latest_version: strawberry.auto
+    modified_time: strawberry.auto
+    creation_time: strawberry.auto
