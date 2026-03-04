@@ -47,6 +47,10 @@ PyObjectIdType = strawberry.scalar(
 class MailReturnType:
     """
     Type used for returning the subject and uid of a mail.
+
+    Attributes:
+        uid (str): UID of the sender.
+        subject (str): Subject of the mail.
     """
     uid: strawberry.auto
     subject: strawberry.auto
@@ -58,6 +62,9 @@ class MailInput:
     Input used for taking subject, body and to recipients of a mail.
 
     Attributes:
+        subject (str): Subject of the mail.
+        body (str): Body of the mail.
+        to_recipients (List[str]): List of to recipients.
         cc_recipients (Optional[List[str]]): List of CC recipients.
                                         Defaults to None.
         uid (Optional[str]): UID of the sender. Defaults to None.
@@ -103,7 +110,7 @@ class CCRecruitmentInput:
     good_fit: strawberry.auto
 
 
-@strawberry.experimental.pydantic.type(model=CCRecruitment)
+@strawberry.experimental.pydantic.type(model=CCRecruitment, all_fields=True)
 class CCRecruitmentType:
     """
     Type used for returning the answers of the recruitment form.
@@ -111,19 +118,8 @@ class CCRecruitmentType:
     Attributes:
         fields (models.CCRecruitment): All fields of the CCRecruitment model.
     """
-    id: strawberry.auto
-    uid: strawberry.auto
-    email: strawberry.auto
-    teams: strawberry.auto
-    design_experience: strawberry.auto
-    why_this_position: strawberry.auto
-    why_cc: strawberry.auto
-    ideas1: strawberry.auto
-    ideas: strawberry.auto
-    other_bodies: strawberry.auto
-    good_fit: strawberry.auto
-    sent_time: strawberry.auto
-    apply_year: strawberry.auto
+
+    pass
 
 
 # signed url object type
@@ -172,7 +168,7 @@ class StorageFileInput:
     filetype: strawberry.auto
 
 
-@strawberry.experimental.pydantic.type(model=StorageFile)
+@strawberry.experimental.pydantic.type(model=StorageFile, all_fields=True)
 class StorageFileType:
     """
     Input used for taking all the details regarding the file.
@@ -180,10 +176,5 @@ class StorageFileType:
     Attributes:
         fields (models.StorageFile): All fields of the StorageFile model.
     """
-    id: strawberry.auto
-    title: strawberry.auto
-    filename: strawberry.auto
-    filetype: strawberry.auto
-    latest_version: strawberry.auto
-    modified_time: strawberry.auto
-    creation_time: strawberry.auto
+    
+    pass
