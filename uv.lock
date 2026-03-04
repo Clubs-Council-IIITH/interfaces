@@ -288,7 +288,7 @@ dependencies = [
     { name = "httpx" },
     { name = "msal" },
     { name = "pymongo" },
-    { name = "strawberry-graphql", extra = ["cli", "fastapi"] },
+    { name = "strawberry-graphql", extra = ["cli"] },
 ]
 
 [package.metadata]
@@ -298,7 +298,7 @@ requires-dist = [
     { name = "httpx", specifier = "==0.28.1" },
     { name = "msal", specifier = "==1.35.0" },
     { name = "pymongo", specifier = "==4.16.0" },
-    { name = "strawberry-graphql", extras = ["cli", "fastapi"], specifier = "==0.308.2" },
+    { name = "strawberry-graphql", extras = ["cli"], specifier = "==0.308.2" },
 ]
 
 [[package]]
@@ -620,10 +620,6 @@ cli = [
     { name = "typer" },
     { name = "uvicorn" },
     { name = "websockets" },
-]
-fastapi = [
-    { name = "fastapi" },
-    { name = "python-multipart" },
 ]
 
 [[package]]
