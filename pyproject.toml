@@ -1,3 +1,18 @@
+[project]
+name = "interfaces-subgraph"
+version = "1.0.0"
+readme = "README.md"
+
+requires-python = ">=3.11"
+dependencies = [
+    "email-validator>=2.2.0",
+    "fastapi==0.116.1",
+    "httpx==0.28.1",
+    "msal==1.33.0",
+    "pymongo==4.14.1",
+    "strawberry-graphql[debug-server]==0.280.0",
+]
+
 [tool.ruff]
 line-length = 79
 indent-width = 4
