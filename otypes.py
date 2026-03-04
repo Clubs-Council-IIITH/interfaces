@@ -52,6 +52,7 @@ class MailReturnType:
         uid (str): UID of the sender.
         subject (str): Subject of the mail.
     """
+
     uid: strawberry.auto
     subject: strawberry.auto
 
@@ -71,6 +72,7 @@ class MailInput:
         html_body (Optional[bool]): Whether the body is in HTML format.
                                 Defaults to False
     """
+
     subject: strawberry.auto
     body: strawberry.auto
     to_recipients: strawberry.auto
@@ -98,6 +100,7 @@ class CCRecruitmentInput:
                                 Defaults to None.
         good_fit (str): Why the applicant is a good fit for CC.
     """
+
     uid: strawberry.auto
     email: strawberry.auto
     teams: strawberry.auto
@@ -163,6 +166,7 @@ class StorageFileInput:
         filename (str): Name of the file.
         filetype (str): Type of the file.
     """
+
     title: strawberry.auto
     filename: strawberry.auto
     filetype: strawberry.auto
@@ -176,5 +180,5 @@ class StorageFileType:
     Attributes:
         fields (models.StorageFile): All fields of the StorageFile model.
     """
-    
+
     pass
