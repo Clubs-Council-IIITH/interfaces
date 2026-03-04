@@ -43,51 +43,43 @@ PyObjectIdType = strawberry.scalar(
 """A scalar Type for serializing PyObjectId, used for id field"""
 
 
-@strawberry.experimental.pydantic.type(model=Mails, fields=["subject", "uid"])
+@strawberry.experimental.pydantic.type(model=Mails)
 class MailReturnType:
     """
     Type used for returning the subject and uid of a mail.
+
+    Attributes:
+        uid (str): UID of the sender.
+        subject (str): Subject of the mail.
     """
+    uid: strawberry.auto
+    subject: strawberry.auto
 
-    pass
 
-
-@strawberry.experimental.pydantic.input(
-    model=Mails, fields=["subject", "body", "to_recipients"]
-)
+@strawberry.experimental.pydantic.input(model=Mails)
 class MailInput:
     """
     Input used for taking subject, body and to recipients of a mail.
 
     Attributes:
+        subject (str): Subject of the mail.
+        body (str): Body of the mail.
+        to_recipients (List[str]): List of to recipients.
         cc_recipients (Optional[List[str]]): List of CC recipients.
                                         Defaults to None.
         uid (Optional[str]): UID of the sender. Defaults to None.
         html_body (Optional[bool]): Whether the body is in HTML format.
                                 Defaults to False
     """
-
+    subject: strawberry.auto
+    body: strawberry.auto
+    to_recipients: strawberry.auto
     cc_recipients: Optional[List[str]] = strawberry.UNSET
     uid: Optional[str] = strawberry.UNSET
     html_body: Optional[bool] = False
 
 
-@strawberry.experimental.pydantic.input(
-    model=CCRecruitment,
-    # all_fields=True,
-    fields=[
-        "uid",
-        "email",
-        "teams",
-        "design_experience",
-        "why_this_position",
-        "why_cc",
-        "good_fit",
-        "ideas1",
-        "ideas",
-        "other_bodies",
-    ],
-)
+@strawberry.experimental.pydantic.input(model=CCRecruitment)
 class CCRecruitmentInput:
     """
     Input used for taking in answers of the recruitment form.
@@ -106,8 +98,16 @@ class CCRecruitmentInput:
                                 Defaults to None.
         good_fit (str): Why the applicant is a good fit for CC.
     """
-
-    pass
+    uid: strawberry.auto
+    email: strawberry.auto
+    teams: strawberry.auto
+    design_experience: strawberry.auto
+    why_this_position: strawberry.auto
+    why_cc: strawberry.auto
+    ideas1: strawberry.auto
+    ideas: strawberry.auto
+    other_bodies: strawberry.auto
+    good_fit: strawberry.auto
 
 
 @strawberry.experimental.pydantic.type(model=CCRecruitment, all_fields=True)
@@ -153,9 +153,7 @@ class SignedURLInput:
 
 
 # StorageFile Types
-@strawberry.experimental.pydantic.input(
-    model=StorageFile, fields=["title", "filename", "filetype"]
-)
+@strawberry.experimental.pydantic.input(model=StorageFile)
 class StorageFileInput:
     """
     Input used for taking details regarding the file's title, name and type.
@@ -165,8 +163,9 @@ class StorageFileInput:
         filename (str): Name of the file.
         filetype (str): Type of the file.
     """
-
-    pass
+    title: strawberry.auto
+    filename: strawberry.auto
+    filetype: strawberry.auto
 
 
 @strawberry.experimental.pydantic.type(model=StorageFile, all_fields=True)
@@ -177,5 +176,5 @@ class StorageFileType:
     Attributes:
         fields (models.StorageFile): All fields of the StorageFile model.
     """
-
+    
     pass
