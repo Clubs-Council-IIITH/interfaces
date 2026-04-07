@@ -6,11 +6,11 @@ readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
     "email-validator>=2.3.0",
-    "fastapi==0.135.2",
+    "fastapi~=0.135.2",
     "httpx==0.28.1",
     "msal==1.35.1",
     "pymongo==4.16.0",
-    "strawberry-graphql[cli]==0.312.2",
+    "strawberry-graphql[cli]==0.313.0",
 ]
 
 [tool.ruff]
