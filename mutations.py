@@ -1,3 +1,5 @@
+from graphql import GraphQLError
+
 """
 Mutation Resolvers
 """
@@ -57,13 +59,13 @@ async def sendMail(
 
     user = info.context.user
     if not user:
-        raise Exception("Not logged in!")
+        raise GraphQLError("Not logged in!")
 
     if user.get("role", None) not in ["cc", "club", "slo", "slc", "email_bot"]:
-        raise Exception("Not Authenticated to access this API!!")
+        raise GraphQLError("Not Authenticated to access this API!!")
 
     if inter_communication_secret != inter_communication_secret_global:
-        raise Exception("Authentication Error! Invalid secret!")
+        raise GraphQLError("Authentication Error! Invalid secret!")
 
     mail_input = jsonable_encoder(mailInput.to_pydantic())
 
@@ -123,10 +125,10 @@ async def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
 
     user = info.context.user
     if not user:
-        raise Exception("Not logged in!")
+        raise GraphQLError("Not logged in!")
 
     if user.get("role", None) not in ["public"]:
-        raise Exception("Not Authenticated to access this API!!")
+        raise GraphQLError("Not Authenticated to access this API!!")
 
     cc_recruitment_input = jsonable_encoder(ccRecruitmentInput.to_pydantic())
     curr_year = int(get_curr_time_str()[:4])
@@ -135,7 +137,7 @@ async def ccApply(ccRecruitmentInput: CCRecruitmentInput, info: Info) -> bool:
     if await ccdb.find_one(
         {"email": cc_recruitment_input["email"], "apply_year": curr_year}
     ):
-        raise Exception("You have already applied for CC!!")
+        raise GraphQLError("You have already applied for CC!!")
 
     cc_recruitment_input["apply_year"] = curr_year
 

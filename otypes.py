@@ -1,6 +1,5 @@
 import json
 from functools import cached_property
-from typing import Dict, List, Optional, Union
 
 import strawberry
 from strawberry.fastapi import BaseContext
@@ -18,7 +17,7 @@ class Context(BaseContext):
     """
 
     @cached_property
-    def user(self) -> Union[Dict, None]:
+    def user(self) -> dict | None:
         if not self.request:
             return None
 
@@ -26,7 +25,7 @@ class Context(BaseContext):
         return user
 
     @cached_property
-    def cookies(self) -> Union[Dict, None]:
+    def cookies(self) -> dict | None:
         if not self.request:
             return None
 
@@ -76,9 +75,9 @@ class MailInput:
     subject: strawberry.auto
     body: strawberry.auto
     to_recipients: strawberry.auto
-    cc_recipients: Optional[List[str]] = strawberry.UNSET
-    uid: Optional[str] = strawberry.UNSET
-    html_body: Optional[bool] = False
+    cc_recipients: list[str] | None = strawberry.UNSET
+    uid: str | None = strawberry.UNSET
+    html_body: bool | None = False
 
 
 @strawberry.experimental.pydantic.input(model=CCRecruitment)
@@ -121,8 +120,6 @@ class CCRecruitmentType:
     Attributes:
         fields (models.CCRecruitment): All fields of the CCRecruitment model.
     """
-
-    pass
 
 
 # signed url object type
@@ -180,5 +177,3 @@ class StorageFileType:
     Attributes:
         fields (models.StorageFile): All fields of the StorageFile model.
     """
-
-    pass

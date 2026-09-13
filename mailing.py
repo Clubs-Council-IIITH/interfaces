@@ -40,10 +40,12 @@ async def send_mail(
     subject: str,
     body: str,
     to: list,
-    cc: list = [],
+    cc: list | None = None,
     reply_to: str | None = None,
     html_body: bool | None = False,
 ) -> bool:
+    if cc is None:
+        cc = []
     """
     Method to send email
 

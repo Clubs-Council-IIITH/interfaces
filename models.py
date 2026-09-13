@@ -1,6 +1,6 @@
 from datetime import datetime
 from enum import StrEnum, auto
-from typing import Any, List
+from typing import Any
 
 import strawberry
 from bson import ObjectId
@@ -59,8 +59,8 @@ class Mails(BaseModel):
     uid: str | None = None
     subject: str = Field(..., max_length=100)
     body: str = Field(...)
-    to_recipients: List[EmailStr] = Field(...)
-    cc_recipients: List[EmailStr] = Field([])
+    to_recipients: list[EmailStr] = Field(...)
+    cc_recipients: list[EmailStr] = Field([])
     html_body: bool = Field(default=False)
 
     sent_time: datetime = Field(default_factory=get_utc_time, frozen=True)
@@ -140,7 +140,7 @@ class CCRecruitment(BaseModel):
     uid: str = Field(..., max_length=100)
     email: EmailStr = Field(...)
 
-    teams: List[Team] = []
+    teams: list[Team] = []
     design_experience: str | None = None
 
     why_this_position: str = Field()

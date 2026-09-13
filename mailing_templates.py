@@ -22,7 +22,7 @@ Clubs Council.
 
 Note: This automated email has been generated from the Clubs Council website.
 For more details, visit clubs.iiit.ac.in.
-"""  # noqa: E501
+"""
 )
 
 CC_APPLICANT_CONFIRMATION_SUBJECT = Template(

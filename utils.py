@@ -9,9 +9,6 @@ inter_communication_secret = os.getenv("INTER_COMMUNICATION_SECRET")
 ist = ZoneInfo("Asia/Kolkata")
 """IST timezone"""
 
-utc = ZoneInfo("UTC")
-"""UTC timezone"""
-
 
 async def delete_file(filename) -> str:
     """
@@ -37,19 +34,19 @@ async def delete_file(filename) -> str:
         )
 
     if response.status_code != 200:
-        raise Exception(response.text)
+        raise RuntimeError(response.text)
 
     return response.text
 
 
 def get_utc_time() -> datetime:
     """
-    Current time according to UTC timezone.
+    Current time according to Asia/Kolkata (IST) timezone.
 
     Returns:
-        datetime: Current UTC time
+        datetime: Current IST time
     """
-    return datetime.now(utc)
+    return datetime.now(ist)
 
 
 def get_curr_time_str() -> str:

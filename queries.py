@@ -1,10 +1,11 @@
+from graphql import GraphQLError
+
 """
 Query Resolvers
 """
 
 import json
 import os
-from typing import List
 
 import httpx
 import strawberry
@@ -45,7 +46,7 @@ async def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
     """
     user = info.context.user
     if not user:
-        raise Exception("Not logged in!")
+        raise GraphQLError("Not logged in!")
 
     async with httpx.AsyncClient() as client:
         # make request to files api
@@ -62,7 +63,7 @@ async def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
 
     # error handling
     if response.status_code != 200:
-        raise Exception(response.text)
+        raise GraphQLError(response.text)
 
     return SignedURL(url=response.text)
 
@@ -71,7 +72,7 @@ async def signedUploadURL(details: SignedURLInput, info: Info) -> SignedURL:
 async def ccApplications(
     info: Info,
     year: int = 2024,
-) -> List[CCRecruitmentType]:
+) -> list[CCRecruitmentType]:
     """
     Returns list of all CC Applications for CC.
 
@@ -91,13 +92,13 @@ async def ccApplications(
 
     user = info.context.user
     if not user:
-        raise Exception("Not logged in!")
+        raise GraphQLError("Not logged in!")
 
     if user.get("role", None) not in ["cc"]:
-        raise Exception("Not Authenticated to access this API!!")
+        raise GraphQLError("Not Authenticated to access this API!!")
 
     if year < 2024:
-        raise Exception("Invalid year")
+        raise GraphQLError("Invalid year")
 
     results = await ccdb.find().to_list(length=None)
     applications = [
@@ -129,16 +130,16 @@ async def haveAppliedForCC(info: Info, year: int | None = None) -> bool:
 
     user = info.context.user
     if not user:
-        raise Exception("Not logged in!")
+        raise GraphQLError("Not logged in!")
 
     if user.get("role", None) not in ["public"]:
-        raise Exception("Not Authenticated to access this API!!")
+        raise GraphQLError("Not Authenticated to access this API!!")
 
     if year is None:
         year = int(get_curr_time_str()[:4])
 
     if year < 2024:
-        raise Exception("Invalid year")
+        raise GraphQLError("Invalid year")
 
     # check if user already applied in the same year
     results = await ccdb.find({"uid": user["uid"]}).to_list(length=None)
@@ -152,7 +153,7 @@ async def haveAppliedForCC(info: Info, year: int | None = None) -> bool:
 
 
 @strawberry.field
-async def storagefiles(filetype: str) -> List[StorageFileType]:
+async def storagefiles(filetype: str) -> list[StorageFileType]:
     """
     Gets all the storage files, has public access
 
